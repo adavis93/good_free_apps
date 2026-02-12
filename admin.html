@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Good Free Apps</title>
+
+  <!-- Shared Design System -->
+  <link rel="stylesheet" href="shared/design-tokens.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================
+       ADMIN DASHBOARD STYLES
+       ========================================= */
+
+    /* --- Auth Gate --- */
+    .auth-gate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .auth-box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .auth-title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: 0.5rem;
+    }
+
+    .auth-subtitle {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      margin-bottom: 2rem;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-elevated);
+      color: var(--color-text-primary);
+      font-family: var(--font-mono);
+      font-size: var(--font-size-sm);
+      border-radius: var(--radius-md);
+      text-align: center;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-subtle);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 0.875rem;
+      background: var(--color-accent);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-primary);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .auth-btn:hover {
+      background: var(--color-accent-hover);
+    }
+
+    .auth-error {
+      color: var(--color-error);
+      font-size: var(--font-size-sm);
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    /* --- Dashboard Layout --- */
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.active {
+      display: block;
+    }
+
+    .dash-header {
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-background);
+      position: sticky;
+      top: 1rem;
+      margin: 1rem 2rem 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .dash-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dash-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.02em;
+    }
+
+    .dash-badge {
+      padding: 0.25rem 0.75rem;
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .dash-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .dash-content {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 2rem 2.5rem 4rem;
+    }
+
+    /* --- Section Headers --- */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      margin-top: 2.5rem;
+    }
+
+    .section-header:first-child {
+      margin-top: 0;
+    }
+
+    .section-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.01em;
+    }
+
+    .section-subtitle {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    /* --- Stats Cards --- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .stat-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      font-family: var(--font-mono);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-trend {
+      font-size: var(--font-size-xs);
+      font-family: var(--font-mono);
+    }
+
+    .stat-trend.up {
+      color: var(--color-success);
+    }
+
+    .stat-trend.down {
+      color: var(--color-error);
+    }
+
+    .stat-trend.neutral {
+      color: var(--color-text-tertiary);
+    }
+
+    /* --- App Performance Table --- */
+    .table-container {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 1rem 1.25rem;
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface-elevated);
+    }
+
+    .data-table td {
+      padding: 1rem 1.25rem;
+      font-size: var(--font-size-sm);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover td {
+      background: var(--color-surface-elevated);
+    }
+
+    .app-name-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: var(--font-weight-medium);
+    }
+
+    .app-name-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--color-surface-elevated);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    /* --- Feedback List --- */
+    .feedback-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .feedback-filter {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      color: var(--color-text-primary);
+      font-family: var(--font-primary);
+      font-size: var(--font-size-sm);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+    }
+
+    .feedback-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feedback-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      transition: border-color var(--transition-normal);
+    }
+
+    .feedback-item:hover {
+      border-color: var(--color-accent);
+    }
+
+    .feedback-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .feedback-rating {
+      color: #f59e0b;
+      font-size: var(--font-size-md);
+      letter-spacing: 0.1em;
+    }
+
+    .feedback-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .feedback-app-badge {
+      padding: 0.25rem 0.625rem;
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-secondary);
+    }
+
+    .feedback-date {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+    }
+
+    .feedback-text {
+      color: var(--color-text-primary);
+      line-height: var(--line-height-normal);
+      margin-bottom: 0.75rem;
+    }
+
+    .feedback-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .feedback-source {
+      font-size: var(--font-size-xs);
+      color: var(--color-text-tertiary);
+      font-family: var(--font-mono);
+    }
+
+    .feedback-category-tag {
+      padding: 0.2rem 0.5rem;
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* --- Chart Placeholder --- */
+    .chart-placeholder {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text-tertiary);
+      font-size: var(--font-size-sm);
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 1000px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .dash-content {
+        padding: 1.5rem 1rem;
+      }
+
+      .dash-header {
+        margin: 0.75rem 1rem 0;
+        padding: 1rem;
+      }
+
+      .data-table {
+        font-size: var(--font-size-xs);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Auth Gate -->
+  <div class="auth-gate" id="auth-gate">
+    <div class="auth-box">
+      <h1 class="auth-title">Admin Dashboard</h1>
+      <p class="auth-subtitle">Enter the admin token to continue</p>
+      <input
+        type="password"
+        class="auth-input"
+        id="auth-token"
+        placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') authenticate()"
+        autofocus
+      >
+      <button class="auth-btn" onclick="authenticate()">Access Dashboard</button>
+      <p class="auth-error" id="auth-error">Invalid token. Try again.</p>
+    </div>
+  </div>
+
+  <!-- Dashboard (hidden until authenticated) -->
+  <div class="dashboard" id="dashboard">
+
+    <!-- Header -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <span class="dash-title">Admin Dashboard</span>
+        <span class="dash-badge">All Apps</span>
+      </div>
+      <div class="dash-header-actions">
+        <button class="icon-btn" onclick="window.location.href='index.html'" title="Back to hub">←</button>
+        <button class="icon-btn" onclick="refreshData()" title="Refresh data">↻</button>
+        <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="dash-content">
+
+      <!-- Overview Stats -->
+      <div class="section-header">
+        <h2 class="section-title">Overview</h2>
+        <span class="section-subtitle">Last 30 days</span>
+      </div>
+
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Page Views</div>
+          <div class="stat-value" id="stat-views">—</div>
+          <div class="stat-trend neutral" id="trend-views">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique Sessions</div>
+          <div class="stat-value" id="stat-sessions">—</div>
+          <div class="stat-trend neutral" id="trend-sessions">Loading...</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Apps</div>
+          <div class="stat-value" id="stat-apps">—</div>
+          <div class="stat-trend neutral" id="trend-apps">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Feedback Items</div>
+          <div class="stat-value" id="stat-feedback">—</div>
+          <div class="stat-trend neutral" id="trend-feedback">Loading...</div>
+        </div>
+      </div>
+
+      <!-- Usage Chart -->
+      <div class="section-header">
+        <h2 class="section-title">Usage Over Time</h2>
+      </div>
+      <div class="chart-placeholder" id="chart-container">
+        Chart will render here once connected to analytics backend
+      </div>
+
+      <!-- Per-App Performance -->
+      <div class="section-header">
+        <h2 class="section-title">App Performance</h2>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>App</th>
+              <th>Page Views</th>
+              <th>Sessions</th>
+              <th>Avg. Duration</th>
+              <th>Errors</th>
+            </tr>
+          </thead>
+          <tbody id="app-table-body">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--color-text-tertiary); padding: 2rem;">
+                Connect analytics backend to see app data
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Feedback -->
+      <div class="section-header">
+        <h2 class="section-title">Feedback</h2>
+        <div class="feedback-controls">
+          <select class="feedback-filter" id="feedback-filter" onchange="filterFeedback()">
+            <option value="all">All Apps</option>
+          </select>
+        </div>
+      </div>
+      <div class="feedback-list" id="feedback-list">
+        <div class="feedback-item" style="text-align: center; color: var(--color-text-tertiary);">
+          No feedback yet. Feedback submitted through the hub will appear here.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // =========================================
+    // CONFIGURATION
+    // =========================================
+    // Set your admin token here (in production, validate server-side)
+    const ADMIN_TOKEN = 'admin';  // Change this!
+
+    // Set your analytics API endpoint
+    const API_ENDPOINT = '';  // e.g. 'https://your-worker.workers.dev/api'
+
+    // =========================================
+    // AUTHENTICATION
+    // =========================================
+    function authenticate() {
+      const input = document.getElementById('auth-token');
+      const error = document.getElementById('auth-error');
+
+      if (input.value === ADMIN_TOKEN) {
+        document.getElementById('auth-gate').style.display = 'none';
+        document.getElementById('dashboard').classList.add('active');
+        sessionStorage.setItem('admin_auth', 'true');
+        loadDashboardData();
+      } else {
+        error.style.display = 'block';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    // Check if already authenticated this session
+    if (sessionStorage.getItem('admin_auth') === 'true') {
+      document.getElementById('auth-gate').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+    }
+
+    // =========================================
+    // THEME
+    // =========================================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+
+    // Admin defaults to dark, but respect saved preference
+    (function () {
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    })();
+
+    // =========================================
+    // DATA LOADING
+    // =========================================
+    async function loadDashboardData() {
+      if (!API_ENDPOINT) {
+        console.log('[Admin] No API endpoint configured. Using placeholder data.');
+        return;
+      }
+
+      try {
+        const response = await fetch(API_ENDPOINT + '/dashboard', {
+          headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN }
+        });
+
+        if (!response.ok) throw new Error('API error: ' + response.status);
+
+        const data = await response.json();
+        renderStats(data.overview);
+        renderAppTable(data.apps);
+        renderFeedback(data.feedback);
+      } catch (err) {
+        console.error('[Admin] Failed to load dashboard data:', err);
+      }
+    }
+
+    function refreshData() {
+      loadDashboardData();
+    }
+
+    // =========================================
+    // RENDER FUNCTIONS
+    // =========================================
+    function renderStats(overview) {
+      if (!overview) return;
+
+      document.getElementById('stat-views').textContent = formatNumber(overview.totalViews);
+      document.getElementById('stat-sessions').textContent = formatNumber(overview.totalSessions);
+      document.getElementById('stat-apps').textContent = overview.activeApps;
+      document.getElementById('stat-feedback').textContent = overview.feedbackCount;
+
+      setTrend('trend-views', overview.viewsTrend);
+      setTrend('trend-sessions', overview.sessionsTrend);
+      setTrend('trend-feedback', overview.feedbackTrend);
+    }
+
+    function renderAppTable(apps) {
+      if (!apps || apps.length === 0) return;
+
+      const tbody = document.getElementById('app-table-body');
+      tbody.innerHTML = apps.map(app => `
+        <tr>
+          <td>
+            <div class="app-name-cell">
+              <div class="app-name-icon">${app.icon}</div>
+              ${app.name}
+            </div>
+          </td>
+          <td class="mono">${formatNumber(app.views)}</td>
+          <td class="mono">${formatNumber(app.sessions)}</td>
+          <td class="mono">${app.avgDuration}</td>
+          <td class="mono">${app.errors}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderFeedback(feedback) {
+      if (!feedback || feedback.length === 0) return;
+
+      const list = document.getElementById('feedback-list');
+      list.innerHTML = feedback.map(item => `
+        <div class="feedback-item" data-app="${item.app}">
+          <div class="feedback-item-header">
+            <div class="feedback-rating">${'★'.repeat(item.rating)}${'☆'.repeat(5 - item.rating)}</div>
+            <div class="feedback-meta">
+              <span class="feedback-app-badge">${item.app}</span>
+              <span class="feedback-date">${formatDate(item.timestamp)}</span>
+            </div>
+          </div>
+          <p class="feedback-text">${escapeHtml(item.text)}</p>
+          <div class="feedback-footer">
+            <span class="feedback-source">${item.anonymous ? 'Anonymous' : item.email}</span>
+            ${item.category ? `<span class="feedback-category-tag">${item.category}</span>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      // Update filter dropdown
+      const uniqueApps = [...new Set(feedback.map(f => f.app))];
+      const filter = document.getElementById('feedback-filter');
+      filter.innerHTML = '<option value="all">All Apps</option>' +
+        uniqueApps.map(app => `<option value="${app}">${app}</option>`).join('');
+    }
+
+    function filterFeedback() {
+      const value = document.getElementById('feedback-filter').value;
+      const items = document.querySelectorAll('.feedback-item[data-app]');
+      items.forEach(item => {
+        item.style.display = (value === 'all' || item.dataset.app === value) ? '' : 'none';
+      });
+    }
+
+    // =========================================
+    // UTILITIES
+    // =========================================
+    function formatNumber(n) {
+      if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+      return n.toString();
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function setTrend(elementId, trend) {
+      const el = document.getElementById(elementId);
+      if (!trend) return;
+      el.textContent = trend.label;
+      el.className = 'stat-trend ' + (trend.direction || 'neutral');
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // =========================================
+    // INIT
+    // =========================================
+    if (sessionStorage.getItem('admin_auth') === 'true') {
+      loadDashboardData();
+    }
+  </script>
+</body>
+</html>
