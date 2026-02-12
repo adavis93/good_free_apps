@@ -4,1428 +4,641 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Resizer — Good Free Apps</title>
-  <meta name="description" content="Resize images in your browser. No uploads, no accounts, no tracking. Just drag, resize, and download.">
-
-  <!-- Shared Design System -->
+  <meta name="description" content="Resize, crop, or compress images in your browser. No uploads, no accounts, no tracking.">
   <link rel="stylesheet" href="../../shared/design-tokens.css">
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
   <style>
-    /* =========================================
-       APP HEADER (consistent across all apps)
-       ========================================= */
-    .app-header {
-      padding: 1.25rem 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--color-background);
-      position: sticky;
-      top: 1rem;
-      margin: 1rem 2rem 0;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      z-index: 100;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .app-header-left {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-      letter-spacing: -0.02em;
-      text-decoration: none;
-    }
-
-    .logo-mark {
-      width: 36px;
-      height: 36px;
-      background: var(--color-accent);
-      color: #ffffff;
-      font-weight: var(--font-weight-bold);
-      font-size: var(--font-size-base);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    /* =========================================
-       APP LAYOUT
-       ========================================= */
-    .app-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 2rem 4rem;
-    }
-
-    .app-title-section {
-      margin-bottom: 2rem;
-    }
-
-    .app-title {
-      font-size: var(--font-size-2xl);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: -0.02em;
-      margin-bottom: 0.5rem;
-    }
-
-    .app-description {
-      color: var(--color-text-secondary);
-      font-size: var(--font-size-md);
-    }
-
-    /* =========================================
-       DROPZONE
-       ========================================= */
-    .dropzone {
-      border: 2px dashed var(--color-border-strong);
-      border-radius: var(--radius-xl);
-      padding: 3.5rem 2rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      background: var(--color-surface);
-      position: relative;
-    }
-
-    .dropzone:hover,
-    .dropzone.dragover {
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-    }
-
-    .dropzone.dragover {
-      transform: scale(1.01);
-    }
-
-    .dropzone-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-      display: block;
-      opacity: 0.7;
-    }
-
-    .dropzone-title {
-      font-size: var(--font-size-lg);
-      font-weight: var(--font-weight-semibold);
-      margin-bottom: 0.5rem;
-    }
-
-    .dropzone-subtitle {
-      color: var(--color-text-tertiary);
-      font-size: var(--font-size-sm);
-      margin-bottom: 1.25rem;
-    }
-
-    .dropzone-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.75rem 1.5rem;
-      background: var(--color-accent);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: var(--font-primary);
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--font-size-sm);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-    }
-
-    .dropzone-btn:hover {
-      background: var(--color-accent-hover);
-      transform: translateY(-1px);
-    }
-
-    .dropzone-formats {
-      margin-top: 1.25rem;
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      font-family: var(--font-mono);
-    }
-
-    .file-input {
-      display: none;
-    }
-
-    /* =========================================
-       WORKSPACE (shown after image load)
-       ========================================= */
-    .workspace {
-      display: none;
-    }
-
-    .workspace.active {
-      display: block;
-    }
-
-    /* --- Original Info Bar --- */
-    .info-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding: 1rem 1.5rem;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      margin-bottom: 1.5rem;
-    }
-
-    .info-bar-left {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .info-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .info-label {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      font-weight: var(--font-weight-semibold);
-    }
-
-    .info-value {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-    }
-
-    .btn-change-image {
-      padding: 0.5rem 1rem;
-      background: transparent;
-      color: var(--color-text-secondary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-primary);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-    }
-
-    .btn-change-image:hover {
-      border-color: var(--color-accent);
-      color: var(--color-accent);
-    }
-
-    /* --- Main Grid --- */
-    .workspace-grid {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    /* --- Preview Panel --- */
-    .preview-panel {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-
-    .preview-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.25rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .preview-title {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    .preview-dimensions {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-    }
-
-    .preview-area {
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 300px;
-      max-height: 520px;
-      background:
-        linear-gradient(45deg, var(--color-surface-elevated) 25%, transparent 25%),
-        linear-gradient(-45deg, var(--color-surface-elevated) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, var(--color-surface-elevated) 75%),
-        linear-gradient(-45deg, transparent 75%, var(--color-surface-elevated) 75%);
-      background-size: 16px 16px;
-      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
-    }
-
-    .preview-area img {
-      max-width: 100%;
-      max-height: 480px;
-      object-fit: contain;
-      border-radius: var(--radius-sm);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .preview-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.875rem 1.25rem;
-      border-top: 1px solid var(--color-border);
-      background: var(--color-surface);
-    }
-
-    .output-size {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-xs);
-      color: var(--color-text-secondary);
-    }
-
-    .output-size-label {
-      color: var(--color-text-tertiary);
-    }
-
-    /* --- Controls Panel --- */
-    .controls-panel {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .control-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-    }
-
-    .control-card-title {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* --- Presets --- */
-    .presets-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem;
-    }
-
-    .preset-btn {
-      padding: 0.625rem 0.75rem;
-      background: var(--color-surface-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-primary);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-medium);
-      color: var(--color-text-primary);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      text-align: left;
-      line-height: 1.3;
-    }
-
-    .preset-btn:hover {
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-      color: var(--color-accent);
-    }
-
-    .preset-btn.active {
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-      color: var(--color-accent);
-    }
-
-    .preset-name {
-      display: block;
-      margin-bottom: 0.125rem;
-    }
-
-    .preset-size {
-      font-family: var(--font-mono);
-      font-size: 0.6875rem;
-      color: var(--color-text-tertiary);
-    }
-
-    .preset-btn.active .preset-size,
-    .preset-btn:hover .preset-size {
-      color: var(--color-accent);
-      opacity: 0.7;
-    }
-
-    /* --- Dimensions Input --- */
-    .dimensions-row {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-    }
-
-    .dim-input-group {
-      flex: 1;
-    }
-
-    .dim-label {
-      display: block;
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      margin-bottom: 0.375rem;
-      font-weight: var(--font-weight-medium);
-    }
-
-    .dim-input {
-      width: 100%;
-      padding: 0.75rem 0.875rem;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface-elevated);
-      color: var(--color-text-primary);
-      font-family: var(--font-mono);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-      border-radius: var(--radius-md);
-      transition: all var(--transition-normal);
-      text-align: center;
-    }
-
-    .dim-input:focus {
-      outline: none;
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 3px var(--color-accent-subtle);
-      background: var(--color-background);
-    }
-
-    /* Remove number input spinners */
-    .dim-input::-webkit-outer-spin-button,
-    .dim-input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    .dim-input[type=number] {
-      -moz-appearance: textfield;
-    }
-
-    .lock-btn {
-      width: 40px;
-      height: 40px;
-      background: var(--color-accent-subtle);
-      border: 1px solid var(--color-accent);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      font-size: 1.125rem;
-      color: var(--color-accent);
-      margin-top: 1.25rem;
-      flex-shrink: 0;
-    }
-
-    .lock-btn:hover {
-      background: var(--color-accent);
-      color: #ffffff;
-    }
-
-    .lock-btn.unlocked {
-      background: var(--color-surface-elevated);
-      border-color: var(--color-border);
-      color: var(--color-text-tertiary);
-    }
-
-    .lock-btn.unlocked:hover {
-      border-color: var(--color-accent);
-      color: var(--color-accent);
-    }
-
-    .scale-info {
-      margin-top: 0.75rem;
-      font-family: var(--font-mono);
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      text-align: center;
-    }
-
-    .scale-info .scale-pct {
-      color: var(--color-accent);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    /* --- Format Selector --- */
-    .format-row {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .format-btn {
-      flex: 1;
-      padding: 0.625rem;
-      background: var(--color-surface-elevated);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-mono);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-secondary);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    .format-btn:hover {
-      border-color: var(--color-accent);
-      color: var(--color-accent);
-    }
-
-    .format-btn.active {
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-      color: var(--color-accent);
-    }
-
-    .quality-row {
-      margin-top: 0.875rem;
-      display: none;
-    }
-
-    .quality-row.visible {
-      display: block;
-    }
-
-    .quality-label-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.375rem;
-    }
-
-    .quality-label {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      font-weight: var(--font-weight-medium);
-    }
-
-    .quality-value {
-      font-family: var(--font-mono);
-      font-size: var(--font-size-xs);
-      color: var(--color-accent);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    .quality-slider {
-      width: 100%;
-      height: 6px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: var(--color-surface-elevated);
-      border-radius: var(--radius-full);
-      outline: none;
-      cursor: pointer;
-    }
-
-    .quality-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      background: var(--color-accent);
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid var(--color-background);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .quality-slider::-moz-range-thumb {
-      width: 18px;
-      height: 18px;
-      background: var(--color-accent);
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid var(--color-background);
-      box-shadow: var(--shadow-sm);
-    }
-
-    /* --- Action Buttons --- */
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.625rem;
-    }
-
-    .btn-download {
-      width: 100%;
-      padding: 0.9375rem;
-      background: var(--color-accent);
-      color: #ffffff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-family: var(--font-primary);
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--font-size-sm);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .btn-download:hover {
-      background: var(--color-accent-hover);
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .btn-copy {
-      width: 100%;
-      padding: 0.9375rem;
-      background: transparent;
-      color: var(--color-text-primary);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      font-family: var(--font-primary);
-      font-weight: var(--font-weight-semibold);
-      font-size: var(--font-size-sm);
-      cursor: pointer;
-      transition: all var(--transition-normal);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .btn-copy:hover {
-      border-color: var(--color-accent);
-      color: var(--color-accent);
-      background: var(--color-accent-subtle);
-    }
-
-    .btn-copy.copied {
-      border-color: var(--color-success);
-      color: var(--color-success);
-      background: rgba(22, 163, 74, 0.08);
-    }
-
-    /* --- Toast --- */
-    .toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: var(--color-primary);
-      color: var(--color-background);
-      padding: 0.875rem 1.5rem;
-      border-radius: var(--radius-md);
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-medium);
-      box-shadow: var(--shadow-lg);
-      z-index: 1000;
-      opacity: 0;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: none;
-    }
-
-    .toast.visible {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
-    /* =========================================
-       RESPONSIVE
-       ========================================= */
-    @media (max-width: 900px) {
-      .workspace-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .app-container {
-        padding: 1.5rem 1rem 3rem;
-      }
-
-      .app-header {
-        margin: 0.75rem 1rem 0;
-        padding: 1rem 1.25rem;
-      }
-
-      .info-bar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .info-bar-left {
-        width: 100%;
-      }
-
-      .btn-change-image {
-        width: 100%;
-        text-align: center;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .dropzone {
-        padding: 2.5rem 1.25rem;
-      }
-
-      .presets-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .app-title {
-        font-size: var(--font-size-xl);
-      }
-
-      .preview-area {
-        min-height: 200px;
-      }
-
-      .info-bar-left {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-    }
+    .app-header{padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;background:var(--color-background);position:sticky;top:1rem;margin:1rem 2rem 0;border:1px solid var(--color-border);border-radius:var(--radius-lg);z-index:100;backdrop-filter:blur(12px);box-shadow:var(--shadow-sm)}
+    .app-header-left{display:flex;align-items:center;gap:.75rem}
+    .logo{display:flex;align-items:center;gap:.75rem;font-size:var(--font-size-lg);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);letter-spacing:-.02em;text-decoration:none}
+    .logo-mark{width:36px;height:36px;background:var(--color-accent);color:#fff;font-weight:var(--font-weight-bold);font-size:var(--font-size-base);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center}
+    .header-actions{display:flex;align-items:center;gap:.75rem}
+    .app-container{max-width:1200px;margin:0 auto;padding:2rem 2rem 4rem}
+    .app-title-section{margin-bottom:2rem}
+    .app-title{font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);letter-spacing:-.02em;margin-bottom:.5rem}
+    .app-description{color:var(--color-text-secondary);font-size:var(--font-size-md)}
+    .dropzone{border:2px dashed var(--color-border-strong);border-radius:var(--radius-xl);padding:3.5rem 2rem;text-align:center;cursor:pointer;transition:all var(--transition-normal);background:var(--color-surface)}
+    .dropzone:hover,.dropzone.dragover{border-color:var(--color-accent);background:var(--color-accent-subtle)}
+    .dropzone.dragover{transform:scale(1.01)}
+    .dropzone-icon{font-size:3rem;margin-bottom:1rem;display:block;opacity:.7}
+    .dropzone-title{font-size:var(--font-size-lg);font-weight:var(--font-weight-semibold);margin-bottom:.5rem}
+    .dropzone-subtitle{color:var(--color-text-tertiary);font-size:var(--font-size-sm);margin-bottom:1.25rem}
+    .dropzone-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.5rem;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-md);font-family:var(--font-primary);font-weight:var(--font-weight-semibold);font-size:var(--font-size-sm);cursor:pointer;transition:all var(--transition-normal)}
+    .dropzone-btn:hover{background:var(--color-accent-hover);transform:translateY(-1px)}
+    .dropzone-formats{margin-top:1.25rem;font-size:var(--font-size-xs);color:var(--color-text-tertiary);font-family:var(--font-mono)}
+    .file-input{display:none}
+    .workspace{display:none}.workspace.active{display:block}
+    .info-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;padding:1rem 1.5rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:1.5rem}
+    .info-bar-left{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}
+    .info-item{display:flex;align-items:center;gap:.5rem}
+    .info-label{font-size:var(--font-size-xs);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;font-weight:var(--font-weight-semibold)}
+    .info-value{font-family:var(--font-mono);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium)}
+    .btn-change-image{padding:.5rem 1rem;background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border);border-radius:var(--radius-md);font-family:var(--font-primary);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);cursor:pointer;transition:all var(--transition-normal)}
+    .btn-change-image:hover{border-color:var(--color-accent);color:var(--color-accent)}
+    .mode-tabs{display:flex;gap:.375rem;margin-bottom:1.5rem;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:.375rem}
+    .mode-tab{flex:1;padding:.75rem 1rem;background:transparent;border:none;border-radius:var(--radius-md);font-family:var(--font-primary);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);color:var(--color-text-secondary);cursor:pointer;transition:all var(--transition-normal);text-align:center}
+    .mode-tab:hover{color:var(--color-text-primary);background:var(--color-surface-elevated)}
+    .mode-tab.active{background:var(--color-accent);color:#fff;font-weight:var(--font-weight-semibold)}
+    .mode-tab-label{display:block;line-height:1.3}
+    .mode-tab-desc{display:block;font-size:.6875rem;opacity:.7;margin-top:.125rem;font-weight:var(--font-weight-normal)}
+    .workspace-grid{display:grid;grid-template-columns:1fr 360px;gap:1.5rem;align-items:start}
+    .preview-panel{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden}
+    .preview-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;border-bottom:1px solid var(--color-border)}
+    .preview-title{font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold)}
+    .preview-dimensions{font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--color-text-tertiary)}
+    .checkerboard-bg{background-image:linear-gradient(45deg,var(--color-surface-elevated) 25%,transparent 25%),linear-gradient(-45deg,var(--color-surface-elevated) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--color-surface-elevated) 75%),linear-gradient(-45deg,transparent 75%,var(--color-surface-elevated) 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
+    .preview-area{padding:1.5rem;display:flex;align-items:center;justify-content:center;min-height:300px;max-height:520px;position:relative}
+    .preview-area img{max-width:100%;max-height:480px;object-fit:contain;border-radius:var(--radius-sm);box-shadow:var(--shadow-sm)}
+    .preview-footer{display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.25rem;border-top:1px solid var(--color-border)}
+    .output-size{font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--color-text-secondary)}
+    .output-size-label{color:var(--color-text-tertiary)}
+    .crop-editor{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;display:none}
+    .crop-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;border-bottom:1px solid var(--color-border)}
+    .crop-title{font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold)}
+    .crop-hint{font-size:var(--font-size-xs);color:var(--color-text-tertiary);font-family:var(--font-mono)}
+    .crop-canvas-wrapper{position:relative;display:flex;align-items:center;justify-content:center;padding:1rem;min-height:300px;max-height:520px;overflow:hidden;background:var(--color-surface-elevated);user-select:none;touch-action:none}
+    .crop-image-container{position:relative;display:inline-block;line-height:0}
+    .crop-image-container img{display:block;max-width:100%;max-height:480px;pointer-events:none}
+    .crop-box{position:absolute;z-index:2;cursor:grab;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.55)}
+    .crop-box:active{cursor:grabbing}
+    .crop-box::before{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(255,255,255,.2) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.2) 1px,transparent 1px);background-size:33.333% 33.333%;background-position:33.333% 33.333%;pointer-events:none}
+    .crop-handle{position:absolute;width:24px;height:24px;z-index:3}
+    .crop-handle::after{content:'';position:absolute;width:16px;height:16px;background:transparent;border:3px solid #fff;border-radius:2px}
+    .crop-handle-nw{top:-3px;left:-3px;cursor:nw-resize}.crop-handle-nw::after{top:0;left:0;border-right:none;border-bottom:none}
+    .crop-handle-ne{top:-3px;right:-3px;cursor:ne-resize}.crop-handle-ne::after{top:0;right:0;left:auto;border-left:none;border-bottom:none}
+    .crop-handle-se{bottom:-3px;right:-3px;cursor:se-resize}.crop-handle-se::after{bottom:0;right:0;left:auto;top:auto;border-left:none;border-top:none}
+    .crop-handle-sw{bottom:-3px;left:-3px;cursor:sw-resize}.crop-handle-sw::after{bottom:0;left:0;top:auto;border-right:none;border-top:none}
+    .crop-footer{display:flex;justify-content:space-between;align-items:center;padding:.875rem 1.25rem;border-top:1px solid var(--color-border)}
+    .controls-panel{display:flex;flex-direction:column;gap:1.25rem}
+    .control-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:1.25rem}
+    .control-card-title{font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+    .mode-panel{display:none}.mode-panel.active{display:flex;flex-direction:column;gap:1.25rem}
+    .dimensions-row{display:flex;align-items:center;gap:.625rem}
+    .dim-input-group{flex:1}
+    .dim-label{display:block;font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-bottom:.375rem;font-weight:var(--font-weight-medium)}
+    .dim-input{width:100%;padding:.75rem .875rem;border:1px solid var(--color-border);background:var(--color-surface-elevated);color:var(--color-text-primary);font-family:var(--font-mono);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);border-radius:var(--radius-md);transition:all var(--transition-normal);text-align:center}
+    .dim-input:focus{outline:none;border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-subtle);background:var(--color-background)}
+    .dim-input::-webkit-outer-spin-button,.dim-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .dim-input[type=number]{-moz-appearance:textfield}
+    .link-icon{margin-top:1.25rem;flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;color:var(--color-accent);font-size:1rem}
+    .scale-info{margin-top:.5rem;font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--color-text-tertiary);text-align:center}
+    .scale-pct{color:var(--color-accent);font-weight:var(--font-weight-semibold)}
+    .presets-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    .preset-btn{padding:.625rem .75rem;background:var(--color-surface-elevated);border:1px solid var(--color-border);border-radius:var(--radius-md);font-family:var(--font-primary);font-size:var(--font-size-xs);font-weight:var(--font-weight-medium);color:var(--color-text-primary);cursor:pointer;transition:all var(--transition-normal);text-align:left;line-height:1.3}
+    .preset-btn:hover{border-color:var(--color-accent);background:var(--color-accent-subtle);color:var(--color-accent)}
+    .preset-btn.active{border-color:var(--color-accent);background:var(--color-accent-subtle);color:var(--color-accent)}
+    .preset-name{display:block;margin-bottom:.125rem}
+    .preset-size{font-family:var(--font-mono);font-size:.6875rem;color:var(--color-text-tertiary)}
+    .preset-btn.active .preset-size,.preset-btn:hover .preset-size{color:var(--color-accent);opacity:.7}
+    .crop-dims-title{font-size:var(--font-size-xs);font-weight:var(--font-weight-semibold);color:var(--color-text-tertiary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.625rem}
+    .file-size-row{display:flex;gap:.625rem;align-items:flex-end}
+    .file-size-input-group{flex:1}
+    .file-size-input{width:100%;padding:.75rem .875rem;border:1px solid var(--color-border);background:var(--color-surface-elevated);color:var(--color-text-primary);font-family:var(--font-mono);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);border-radius:var(--radius-md);transition:all var(--transition-normal)}
+    .file-size-input:focus{outline:none;border-color:var(--color-accent);box-shadow:0 0 0 3px var(--color-accent-subtle);background:var(--color-background)}
+    .unit-select{padding:.75rem .875rem;border:1px solid var(--color-border);background:var(--color-surface-elevated);color:var(--color-text-primary);font-family:var(--font-mono);font-size:var(--font-size-sm);border-radius:var(--radius-md);cursor:pointer;min-width:72px}
+    .compress-presets{display:flex;gap:.375rem;flex-wrap:wrap;margin-top:.75rem}
+    .compress-preset-btn{padding:.375rem .75rem;background:var(--color-surface-elevated);border:1px solid var(--color-border);border-radius:var(--radius-full);font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--color-text-secondary);cursor:pointer;transition:all var(--transition-normal)}
+    .compress-preset-btn:hover{border-color:var(--color-accent);color:var(--color-accent)}
+    .compress-result{padding:1rem;background:var(--color-surface-elevated);border-radius:var(--radius-md);font-size:var(--font-size-sm);text-align:center;margin-top:.75rem;display:none}
+    .compress-result .result-size{font-family:var(--font-mono);font-weight:var(--font-weight-semibold);color:var(--color-accent);font-size:var(--font-size-base)}
+    .compress-result .result-detail{font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:.25rem}
+    .compress-status{font-size:var(--font-size-xs);color:var(--color-text-tertiary);text-align:center;margin-top:.5rem;font-family:var(--font-mono)}
+    .compress-status.success{color:var(--color-success)}.compress-status.warning{color:var(--color-warning)}
+    .format-row{display:flex;gap:.5rem}
+    .format-btn{flex:1;padding:.625rem;background:var(--color-surface-elevated);border:1px solid var(--color-border);border-radius:var(--radius-md);font-family:var(--font-mono);font-size:var(--font-size-xs);font-weight:var(--font-weight-semibold);color:var(--color-text-secondary);cursor:pointer;transition:all var(--transition-normal);text-align:center;text-transform:uppercase}
+    .format-btn:hover{border-color:var(--color-accent);color:var(--color-accent)}
+    .format-btn.active{border-color:var(--color-accent);background:var(--color-accent-subtle);color:var(--color-accent)}
+    .quality-row{margin-top:.875rem;display:none}.quality-row.visible{display:block}
+    .quality-label-row{display:flex;justify-content:space-between;margin-bottom:.375rem}
+    .quality-label{font-size:var(--font-size-xs);color:var(--color-text-tertiary);font-weight:var(--font-weight-medium)}
+    .quality-value{font-family:var(--font-mono);font-size:var(--font-size-xs);color:var(--color-accent);font-weight:var(--font-weight-semibold)}
+    .quality-slider{width:100%;height:6px;-webkit-appearance:none;appearance:none;background:var(--color-surface-elevated);border-radius:var(--radius-full);outline:none;cursor:pointer}
+    .quality-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;background:var(--color-accent);border-radius:50%;cursor:pointer;border:2px solid var(--color-background);box-shadow:var(--shadow-sm)}
+    .quality-slider::-moz-range-thumb{width:18px;height:18px;background:var(--color-accent);border-radius:50%;cursor:pointer;border:2px solid var(--color-background);box-shadow:var(--shadow-sm)}
+    .action-buttons{display:flex;flex-direction:column;gap:.625rem}
+    .btn-download{width:100%;padding:.9375rem;background:var(--color-accent);color:#fff;border:none;border-radius:var(--radius-md);font-family:var(--font-primary);font-weight:var(--font-weight-semibold);font-size:var(--font-size-sm);cursor:pointer;transition:all var(--transition-normal);display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .btn-download:hover{background:var(--color-accent-hover);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+    .btn-copy{width:100%;padding:.9375rem;background:transparent;color:var(--color-text-primary);border:1px solid var(--color-border);border-radius:var(--radius-md);font-family:var(--font-primary);font-weight:var(--font-weight-semibold);font-size:var(--font-size-sm);cursor:pointer;transition:all var(--transition-normal);display:flex;align-items:center;justify-content:center;gap:.5rem}
+    .btn-copy:hover{border-color:var(--color-accent);color:var(--color-accent);background:var(--color-accent-subtle)}
+    .btn-copy.copied{border-color:var(--color-success);color:var(--color-success);background:rgba(22,163,74,.08)}
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--color-primary);color:var(--color-background);padding:.875rem 1.5rem;border-radius:var(--radius-md);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);box-shadow:var(--shadow-lg);z-index:1000;opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none}
+    .toast.visible{transform:translateX(-50%) translateY(0);opacity:1}
+    @media(max-width:900px){.workspace-grid{grid-template-columns:1fr}.app-container{padding:1.5rem 1rem 3rem}.app-header{margin:.75rem 1rem 0;padding:1rem 1.25rem}.info-bar{flex-direction:column;align-items:flex-start}.info-bar-left{width:100%}.btn-change-image{width:100%;text-align:center}}
+    @media(max-width:600px){.dropzone{padding:2.5rem 1.25rem}.presets-grid{grid-template-columns:1fr}.app-title{font-size:var(--font-size-xl)}.preview-area,.crop-canvas-wrapper{min-height:220px}.info-bar-left{flex-direction:column;gap:.5rem}.mode-tab-desc{display:none}}
   </style>
 </head>
 <body>
-
-  <!-- App Header -->
   <header class="app-header">
     <div class="app-header-left">
       <a href="../../index.html" class="logo" title="Back to hub">
-        <div class="logo-mark">G</div>
-        <span>Good Free Apps</span>
+        <div class="logo-mark">G</div><span>Good Free Apps</span>
       </a>
     </div>
     <div class="header-actions">
-      <button class="icon-btn" onclick="window.location.href='../../index.html'" title="Back to all apps">
-        ←
-      </button>
-      <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">
-        <span id="theme-icon">◐</span>
-      </button>
+      <button class="icon-btn" onclick="window.location.href='../../index.html'" title="Back to all apps">&#8592;</button>
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme"><span id="theme-icon">&#9684;</span></button>
     </div>
   </header>
 
-  <!-- App Content -->
   <main class="app-container">
     <div class="app-title-section">
       <h1 class="app-title">Image Resizer</h1>
-      <p class="app-description">Resize images in your browser. Nothing leaves your device.</p>
+      <p class="app-description">Resize, crop, or compress images in your browser. Nothing leaves your device.</p>
     </div>
 
-    <!-- Dropzone (shown until image is loaded) -->
     <div class="dropzone" id="dropzone">
-      <span class="dropzone-icon">🖼️</span>
+      <span class="dropzone-icon">&#128444;&#65039;</span>
       <div class="dropzone-title">Drop an image here</div>
       <div class="dropzone-subtitle">or click to browse your files</div>
       <button class="dropzone-btn" id="browse-btn" type="button">Choose Image</button>
-      <div class="dropzone-formats">JPEG · PNG · GIF · WebP · BMP · TIFF</div>
-      <input
-        type="file"
-        class="file-input"
-        id="file-input"
-        accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff"
-      >
+      <div class="dropzone-formats">JPEG &middot; PNG &middot; GIF &middot; WebP &middot; BMP &middot; TIFF</div>
+      <input type="file" class="file-input" id="file-input" accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff">
     </div>
 
-    <!-- Workspace (shown after image load) -->
     <div class="workspace" id="workspace">
-
-      <!-- Original Image Info -->
       <div class="info-bar">
         <div class="info-bar-left">
-          <div class="info-item">
-            <span class="info-label">File</span>
-            <span class="info-value" id="info-filename">—</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Size</span>
-            <span class="info-value" id="info-filesize">—</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Original</span>
-            <span class="info-value" id="info-dimensions">—</span>
-          </div>
+          <div class="info-item"><span class="info-label">File</span><span class="info-value" id="info-filename">&mdash;</span></div>
+          <div class="info-item"><span class="info-label">Size</span><span class="info-value" id="info-filesize">&mdash;</span></div>
+          <div class="info-item"><span class="info-label">Original</span><span class="info-value" id="info-dimensions">&mdash;</span></div>
         </div>
         <button class="btn-change-image" id="change-image-btn" type="button">Change Image</button>
       </div>
 
-      <!-- Main Grid: Preview + Controls -->
-      <div class="workspace-grid">
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="scale" type="button">
+          <span class="mode-tab-label">Scale</span><span class="mode-tab-desc">Keep original ratio</span>
+        </button>
+        <button class="mode-tab" data-mode="crop" type="button">
+          <span class="mode-tab-label">Crop &amp; Resize</span><span class="mode-tab-desc">Fit to exact size</span>
+        </button>
+        <button class="mode-tab" data-mode="compress" type="button">
+          <span class="mode-tab-label">Compress</span><span class="mode-tab-desc">Target a file size</span>
+        </button>
+      </div>
 
-        <!-- Preview Panel -->
-        <div class="preview-panel">
-          <div class="preview-header">
-            <span class="preview-title">Preview</span>
-            <span class="preview-dimensions" id="preview-dimensions">—</span>
+      <div class="workspace-grid">
+        <div>
+          <div class="preview-panel" id="preview-panel">
+            <div class="preview-header"><span class="preview-title">Preview</span><span class="preview-dimensions" id="preview-dimensions">&mdash;</span></div>
+            <div class="preview-area checkerboard-bg"><img id="preview-image" alt="Resized preview"></div>
+            <div class="preview-footer"><span class="output-size"><span class="output-size-label">Est. size: </span><span id="output-filesize">&mdash;</span></span></div>
           </div>
-          <div class="preview-area">
-            <img id="preview-image" alt="Resized preview">
-          </div>
-          <div class="preview-footer">
-            <span class="output-size">
-              <span class="output-size-label">Est. size: </span>
-              <span id="output-filesize">—</span>
-            </span>
+          <div class="crop-editor" id="crop-editor">
+            <div class="crop-header"><span class="crop-title">Position Your Crop</span><span class="crop-hint">Drag to move &middot; corners to resize</span></div>
+            <div class="crop-canvas-wrapper" id="crop-wrapper">
+              <div class="crop-image-container" id="crop-container">
+                <img id="crop-image" alt="Crop source">
+                <div class="crop-box" id="crop-box">
+                  <div class="crop-handle crop-handle-nw" data-handle="nw"></div>
+                  <div class="crop-handle crop-handle-ne" data-handle="ne"></div>
+                  <div class="crop-handle crop-handle-se" data-handle="se"></div>
+                  <div class="crop-handle crop-handle-sw" data-handle="sw"></div>
+                </div>
+              </div>
+            </div>
+            <div class="crop-footer">
+              <span class="output-size"><span class="output-size-label">Output: </span><span id="crop-output-dims">&mdash;</span></span>
+              <span class="output-size"><span class="output-size-label">Est. size: </span><span id="crop-output-filesize">&mdash;</span></span>
+            </div>
           </div>
         </div>
 
-        <!-- Controls -->
         <div class="controls-panel">
-
-          <!-- Presets -->
-          <div class="control-card">
-            <div class="control-card-title">📐 Presets</div>
-            <div class="presets-grid" id="presets-grid">
-              <!-- Rendered by JS -->
-            </div>
-          </div>
-
-          <!-- Dimensions -->
-          <div class="control-card">
-            <div class="control-card-title">📏 Dimensions</div>
-            <div class="dimensions-row">
-              <div class="dim-input-group">
-                <label class="dim-label" for="width-input">Width (px)</label>
-                <input type="number" class="dim-input" id="width-input" min="1" max="10000" placeholder="Width">
+          <!-- SCALE -->
+          <div class="mode-panel active" id="panel-scale">
+            <div class="control-card">
+              <div class="control-card-title">&#128207; Dimensions</div>
+              <div class="dimensions-row">
+                <div class="dim-input-group"><label class="dim-label" for="scale-width">Width (px)</label><input type="number" class="dim-input" id="scale-width" min="1" max="10000"></div>
+                <div class="link-icon">&#128279;</div>
+                <div class="dim-input-group"><label class="dim-label" for="scale-height">Height (px)</label><input type="number" class="dim-input" id="scale-height" min="1" max="10000"></div>
               </div>
-              <button class="lock-btn" id="lock-btn" type="button" title="Lock aspect ratio" aria-label="Lock aspect ratio">
-                🔗
-              </button>
-              <div class="dim-input-group">
-                <label class="dim-label" for="height-input">Height (px)</label>
-                <input type="number" class="dim-input" id="height-input" min="1" max="10000" placeholder="Height">
+              <div class="scale-info" id="scale-info"></div>
+            </div>
+            <div class="control-card">
+              <div class="control-card-title">&#128190; Output Format</div>
+              <div class="format-row" id="scale-format-row"></div>
+              <div class="quality-row" id="scale-quality-row"><div class="quality-label-row"><span class="quality-label">Quality</span><span class="quality-value" id="scale-quality-value">92%</span></div><input type="range" class="quality-slider" id="scale-quality-slider" min="10" max="100" value="92"></div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn-download" id="scale-download-btn" type="button"><span>&#11015;</span> Download</button>
+              <button class="btn-copy" id="scale-copy-btn" type="button"><span>&#128203;</span> Copy to Clipboard</button>
+            </div>
+          </div>
+          <!-- CROP -->
+          <div class="mode-panel" id="panel-crop">
+            <div class="control-card">
+              <div class="control-card-title">&#128208; Target Size</div>
+              <div class="presets-grid" id="presets-grid"></div>
+              <div style="margin-top:1rem">
+                <div class="crop-dims-title">Custom Size</div>
+                <div class="dimensions-row">
+                  <div class="dim-input-group"><label class="dim-label" for="crop-width">Width (px)</label><input type="number" class="dim-input" id="crop-width" min="1" max="10000"></div>
+                  <div class="link-icon" style="color:var(--color-text-tertiary)">&times;</div>
+                  <div class="dim-input-group"><label class="dim-label" for="crop-height">Height (px)</label><input type="number" class="dim-input" id="crop-height" min="1" max="10000"></div>
+                </div>
               </div>
             </div>
-            <div class="scale-info" id="scale-info"></div>
-          </div>
-
-          <!-- Output Format -->
-          <div class="control-card">
-            <div class="control-card-title">💾 Output Format</div>
-            <div class="format-row" id="format-row">
-              <!-- Rendered by JS -->
+            <div class="control-card">
+              <div class="control-card-title">&#128190; Output Format</div>
+              <div class="format-row" id="crop-format-row"></div>
+              <div class="quality-row" id="crop-quality-row"><div class="quality-label-row"><span class="quality-label">Quality</span><span class="quality-value" id="crop-quality-value">92%</span></div><input type="range" class="quality-slider" id="crop-quality-slider" min="10" max="100" value="92"></div>
             </div>
-            <div class="quality-row" id="quality-row">
-              <div class="quality-label-row">
-                <span class="quality-label">Quality</span>
-                <span class="quality-value" id="quality-value">92%</span>
+            <div class="action-buttons">
+              <button class="btn-download" id="crop-download-btn" type="button"><span>&#11015;</span> Download</button>
+              <button class="btn-copy" id="crop-copy-btn" type="button"><span>&#128203;</span> Copy to Clipboard</button>
+            </div>
+          </div>
+          <!-- COMPRESS -->
+          <div class="mode-panel" id="panel-compress">
+            <div class="control-card">
+              <div class="control-card-title">&#127919; Target File Size</div>
+              <div class="file-size-row">
+                <div class="file-size-input-group"><label class="dim-label" for="target-size-input">Max file size</label><input type="number" class="file-size-input" id="target-size-input" min="1" placeholder="e.g. 500"></div>
+                <div><label class="dim-label">&nbsp;</label><select class="unit-select" id="target-size-unit"><option value="KB">KB</option><option value="MB">MB</option></select></div>
               </div>
-              <input type="range" class="quality-slider" id="quality-slider" min="10" max="100" value="92">
+              <div class="compress-presets">
+                <button class="compress-preset-btn" data-size="100" data-unit="KB" type="button">100 KB</button>
+                <button class="compress-preset-btn" data-size="250" data-unit="KB" type="button">250 KB</button>
+                <button class="compress-preset-btn" data-size="500" data-unit="KB" type="button">500 KB</button>
+                <button class="compress-preset-btn" data-size="1" data-unit="MB" type="button">1 MB</button>
+                <button class="compress-preset-btn" data-size="2" data-unit="MB" type="button">2 MB</button>
+              </div>
+              <div class="compress-result" id="compress-result"><div class="result-size" id="compress-result-size">&mdash;</div><div class="result-detail" id="compress-result-detail">&mdash;</div></div>
+              <div class="compress-status" id="compress-status"></div>
+            </div>
+            <div class="control-card">
+              <div class="control-card-title">&#128190; Output Format</div>
+              <div class="format-row" id="compress-format-row"></div>
+            </div>
+            <div class="action-buttons">
+              <button class="btn-download" id="compress-download-btn" type="button"><span>&#11015;</span> Download</button>
+              <button class="btn-copy" id="compress-copy-btn" type="button"><span>&#128203;</span> Copy to Clipboard</button>
             </div>
           </div>
-
-          <!-- Actions -->
-          <div class="action-buttons">
-            <button class="btn-download" id="download-btn" type="button">
-              <span>⬇</span> Download Resized Image
-            </button>
-            <button class="btn-copy" id="copy-btn" type="button">
-              <span>📋</span> Copy to Clipboard
-            </button>
-          </div>
-
         </div>
       </div>
     </div>
   </main>
 
-  <!-- Toast notification -->
   <div class="toast" id="toast"></div>
-
-  <!-- Hidden canvas for resizing -->
-  <canvas id="resize-canvas" style="display:none;"></canvas>
+  <canvas id="resize-canvas" style="display:none"></canvas>
 
   <script>
-    // =========================================
-    // APP CONFIGURATION
-    // =========================================
-    const APP_NAME = 'image-resizer';
-
-    const PRESETS = [
-      { name: 'Profile Photo',     w: 200,  h: 200,  },
-      { name: 'Favicon',           w: 32,   h: 32,   },
-      { name: 'Instagram Square',  w: 1080, h: 1080, },
-      { name: 'Passport Photo',    w: 600,  h: 600,  },
-      { name: 'Twitter/X Header',  w: 1500, h: 500,  },
-      { name: 'Facebook Cover',    w: 820,  h: 312,  },
-      { name: 'LinkedIn Banner',   w: 1584, h: 396,  },
+  (function(){
+    'use strict';
+    var PRESETS=[
+      {name:'Profile Photo',w:200,h:200},{name:'Favicon',w:32,h:32},
+      {name:'Instagram Square',w:1080,h:1080},{name:'Passport Photo',w:600,h:600},
+      {name:'Twitter/X Header',w:1500,h:500},{name:'Facebook Cover',w:820,h:312},
+      {name:'LinkedIn Banner',w:1584,h:396}
+    ];
+    var FORMATS=[
+      {id:'jpeg',label:'JPEG',mime:'image/jpeg',hasQ:true},
+      {id:'png',label:'PNG',mime:'image/png',hasQ:false},
+      {id:'webp',label:'WebP',mime:'image/webp',hasQ:true}
     ];
 
-    const FORMATS = [
-      { id: 'jpeg', label: 'JPEG', mime: 'image/jpeg',  hasQuality: true  },
-      { id: 'png',  label: 'PNG',  mime: 'image/png',   hasQuality: false },
-      { id: 'webp', label: 'WebP', mime: 'image/webp',  hasQuality: true  },
-    ];
+    // State
+    var S={img:null,file:null,ow:0,oh:0,mode:'scale',
+      sw:0,sh:0,sFmt:'jpeg',sQ:.92,sBlob:null,
+      ctw:1080,cth:1080,cFmt:'jpeg',cQ:.92,cBlob:null,cx:0,cy:0,cw:0,ch:0,preset:null,
+      xFmt:'jpeg',xBlob:null,xTarget:0,xW:0,xH:0};
 
-    // =========================================
-    // STATE
-    // =========================================
-    let state = {
-      originalImage: null,       // HTMLImageElement
-      originalFile: null,        // File object
-      originalWidth: 0,
-      originalHeight: 0,
-      targetWidth: 0,
-      targetHeight: 0,
-      aspectRatioLocked: true,
-      aspectRatio: 1,
-      outputFormat: 'jpeg',
-      quality: 0.92,
-      activePreset: null,
-      resizedBlob: null,         // Last rendered blob
+    var sel=function(s){return document.querySelector(s)};
+    var selAll=function(s){return document.querySelectorAll(s)};
+    var canvas=sel('#resize-canvas'), ctx=canvas.getContext('2d');
+
+    // Theme
+    window.toggleTheme=function(){
+      var h=document.documentElement;
+      h.setAttribute('data-theme',h.getAttribute('data-theme')==='dark'?'light':'dark');
+      localStorage.setItem('theme',h.getAttribute('data-theme'));
     };
+    (function(){
+      var s=localStorage.getItem('theme');
+      var d=window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme',s||(d?'dark':'light'));
+    })();
 
-    // =========================================
-    // DOM REFS
-    // =========================================
-    const $ = (sel) => document.querySelector(sel);
-    const dropzone = $('#dropzone');
-    const fileInput = $('#file-input');
-    const workspace = $('#workspace');
-    const widthInput = $('#width-input');
-    const heightInput = $('#height-input');
-    const lockBtn = $('#lock-btn');
-    const previewImage = $('#preview-image');
-    const canvas = $('#resize-canvas');
-    const ctx = canvas.getContext('2d');
-    const qualitySlider = $('#quality-slider');
-    const qualityRow = $('#quality-row');
-    const qualityValue = $('#quality-value');
-    const downloadBtn = $('#download-btn');
-    const copyBtn = $('#copy-btn');
-    const toastEl = $('#toast');
+    // Upload
+    var dz=sel('#dropzone'),fi=sel('#file-input');
+    dz.addEventListener('click',function(){fi.click()});
+    sel('#browse-btn').addEventListener('click',function(e){e.stopPropagation();fi.click()});
+    fi.addEventListener('change',function(e){if(e.target.files[0])loadImage(e.target.files[0])});
+    dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('dragover')});
+    dz.addEventListener('dragleave',function(){dz.classList.remove('dragover')});
+    dz.addEventListener('drop',function(e){
+      e.preventDefault();dz.classList.remove('dragover');
+      var f=e.dataTransfer.files[0];
+      if(f&&f.type.startsWith('image/'))loadImage(f);else showToast('Please drop an image file');
+    });
+    sel('#change-image-btn').addEventListener('click',function(){fi.value='';fi.click()});
+    document.addEventListener('dragover',function(e){if(sel('#workspace').classList.contains('active'))e.preventDefault()});
+    document.addEventListener('drop',function(e){
+      if(!sel('#workspace').classList.contains('active'))return;e.preventDefault();
+      var f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImage(f);
+    });
 
-    // =========================================
-    // THEME
-    // =========================================
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      html.setAttribute('data-theme', next);
-      localStorage.setItem('theme', next);
-    }
-
-    function initTheme() {
-      const saved = localStorage.getItem('theme');
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const theme = saved || (systemDark ? 'dark' : 'light');
-      document.documentElement.setAttribute('data-theme', theme);
-    }
-
-    // =========================================
-    // FILE UPLOAD
-    // =========================================
-    function setupDropzone() {
-      // Click to browse
-      dropzone.addEventListener('click', (e) => {
-        if (e.target.closest('#browse-btn') || e.target === dropzone || e.target.closest('.dropzone-title') || e.target.closest('.dropzone-subtitle') || e.target.closest('.dropzone-icon')) {
-          fileInput.click();
-        }
-      });
-
-      $('#browse-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
-        fileInput.click();
-      });
-
-      // File selected
-      fileInput.addEventListener('change', (e) => {
-        if (e.target.files && e.target.files[0]) {
-          loadImage(e.target.files[0]);
-        }
-      });
-
-      // Drag and drop
-      dropzone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropzone.classList.add('dragover');
-      });
-
-      dropzone.addEventListener('dragleave', () => {
-        dropzone.classList.remove('dragover');
-      });
-
-      dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropzone.classList.remove('dragover');
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-          loadImage(file);
-        } else {
-          showToast('Please drop an image file');
-        }
-      });
-
-      // Change image button
-      $('#change-image-btn').addEventListener('click', () => {
-        fileInput.value = '';
-        fileInput.click();
-      });
-    }
-
-    function loadImage(file) {
-      // Validate type
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/bmp', 'image/tiff'];
-      if (!validTypes.includes(file.type)) {
-        showToast('Unsupported file format');
-        return;
-      }
-
-      state.originalFile = file;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          state.originalImage = img;
-          state.originalWidth = img.naturalWidth;
-          state.originalHeight = img.naturalHeight;
-          state.aspectRatio = img.naturalWidth / img.naturalHeight;
-
-          // Default target = original size
-          state.targetWidth = img.naturalWidth;
-          state.targetHeight = img.naturalHeight;
-          state.activePreset = null;
-
-          showWorkspace();
-          populateInfo();
-          updateDimensionInputs();
-          renderPreview();
+    function loadImage(file){
+      var ok=['image/jpeg','image/png','image/gif','image/webp','image/bmp','image/tiff'];
+      if(ok.indexOf(file.type)<0){showToast('Unsupported format');return}
+      S.file=file;
+      var reader=new FileReader();
+      reader.onload=function(ev){
+        var img=new Image();
+        img.onload=function(){
+          S.img=img;S.ow=img.naturalWidth;S.oh=img.naturalHeight;
+          S.sw=S.ow;S.sh=S.oh;
+          sel('#dropzone').style.display='none';
+          sel('#workspace').classList.add('active');
+          sel('#info-filename').textContent=truncName(file.name,28);
+          sel('#info-filesize').textContent=fmtSize(file.size);
+          sel('#info-dimensions').textContent=S.ow+' \u00d7 '+S.oh;
+          sel('#crop-image').src=ev.target.result;
+          initCropForTarget(S.ctw,S.cth);
+          updateScaleInputs();
+          switchMode(S.mode);
         };
-        img.onerror = () => {
-          showToast('Could not load image');
-        };
-        img.src = e.target.result;
+        img.onerror=function(){showToast('Could not load image')};
+        img.src=ev.target.result;
       };
       reader.readAsDataURL(file);
     }
 
-    // =========================================
-    // WORKSPACE UI
-    // =========================================
-    function showWorkspace() {
-      dropzone.style.display = 'none';
-      workspace.classList.add('active');
-    }
-
-    function populateInfo() {
-      const f = state.originalFile;
-      $('#info-filename').textContent = truncateFilename(f.name, 28);
-      $('#info-filesize').textContent = formatFileSize(f.size);
-      $('#info-dimensions').textContent = `${state.originalWidth} × ${state.originalHeight}`;
-    }
-
-    // =========================================
-    // PRESETS
-    // =========================================
-    function renderPresets() {
-      const grid = $('#presets-grid');
-      grid.innerHTML = PRESETS.map((p, i) => `
-        <button class="preset-btn" data-index="${i}" type="button">
-          <span class="preset-name">${p.name}</span>
-          <span class="preset-size">${p.w} × ${p.h}</span>
-        </button>
-      `).join('');
-
-      grid.addEventListener('click', (e) => {
-        const btn = e.target.closest('.preset-btn');
-        if (!btn) return;
-        const idx = parseInt(btn.dataset.index);
-        applyPreset(idx);
-      });
-    }
-
-    function applyPreset(index) {
-      const p = PRESETS[index];
-      state.targetWidth = p.w;
-      state.targetHeight = p.h;
-      state.activePreset = index;
-
-      // Temporarily unlock aspect ratio for presets (preset defines both dimensions)
-      updateDimensionInputs();
-      highlightPreset(index);
-      renderPreview();
-    }
-
-    function highlightPreset(index) {
-      document.querySelectorAll('.preset-btn').forEach((btn, i) => {
-        btn.classList.toggle('active', i === index);
-      });
-    }
-
-    function clearPresetHighlight() {
-      state.activePreset = null;
-      document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-    }
-
-    // =========================================
-    // DIMENSIONS
-    // =========================================
-    function setupDimensionInputs() {
-      widthInput.addEventListener('input', () => {
-        const w = parseInt(widthInput.value);
-        if (!w || w < 1) return;
-        state.targetWidth = w;
-        if (state.aspectRatioLocked) {
-          state.targetHeight = Math.round(w / state.aspectRatio);
-          heightInput.value = state.targetHeight;
-        }
-        clearPresetHighlight();
-        updateScaleInfo();
-        debouncedRender();
-      });
-
-      heightInput.addEventListener('input', () => {
-        const h = parseInt(heightInput.value);
-        if (!h || h < 1) return;
-        state.targetHeight = h;
-        if (state.aspectRatioLocked) {
-          state.targetWidth = Math.round(h * state.aspectRatio);
-          widthInput.value = state.targetWidth;
-        }
-        clearPresetHighlight();
-        updateScaleInfo();
-        debouncedRender();
-      });
-
-      // Also update on blur for clean values
-      widthInput.addEventListener('blur', finalizeWidthInput);
-      heightInput.addEventListener('blur', finalizeHeightInput);
-
-      // Enter key triggers finalize
-      widthInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { finalizeWidthInput(); widthInput.blur(); } });
-      heightInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { finalizeHeightInput(); heightInput.blur(); } });
-    }
-
-    function finalizeWidthInput() {
-      let w = parseInt(widthInput.value);
-      if (!w || w < 1) w = state.originalWidth;
-      w = Math.min(w, 10000);
-      state.targetWidth = w;
-      if (state.aspectRatioLocked) {
-        state.targetHeight = Math.round(w / state.aspectRatio);
-      }
-      updateDimensionInputs();
-      renderPreview();
-    }
-
-    function finalizeHeightInput() {
-      let h = parseInt(heightInput.value);
-      if (!h || h < 1) h = state.originalHeight;
-      h = Math.min(h, 10000);
-      state.targetHeight = h;
-      if (state.aspectRatioLocked) {
-        state.targetWidth = Math.round(h * state.aspectRatio);
-      }
-      updateDimensionInputs();
-      renderPreview();
-    }
-
-    function updateDimensionInputs() {
-      widthInput.value = state.targetWidth;
-      heightInput.value = state.targetHeight;
-      updateScaleInfo();
-    }
-
-    function updateScaleInfo() {
-      const scaleW = ((state.targetWidth / state.originalWidth) * 100).toFixed(0);
-      const scaleH = ((state.targetHeight / state.originalHeight) * 100).toFixed(0);
-      const el = $('#scale-info');
-      if (scaleW === scaleH) {
-        el.innerHTML = `Scale: <span class="scale-pct">${scaleW}%</span>`;
-      } else {
-        el.innerHTML = `Scale: <span class="scale-pct">${scaleW}%</span> × <span class="scale-pct">${scaleH}%</span>`;
-      }
-    }
-
-    // =========================================
-    // ASPECT RATIO LOCK
-    // =========================================
-    function setupLockButton() {
-      lockBtn.addEventListener('click', () => {
-        state.aspectRatioLocked = !state.aspectRatioLocked;
-        lockBtn.classList.toggle('unlocked', !state.aspectRatioLocked);
-        lockBtn.innerHTML = state.aspectRatioLocked ? '🔗' : '↔️';
-        lockBtn.title = state.aspectRatioLocked ? 'Aspect ratio locked — click to unlock' : 'Aspect ratio unlocked — click to lock';
-
-        // If re-locking, recalculate height from current width
-        if (state.aspectRatioLocked) {
-          state.aspectRatio = state.originalWidth / state.originalHeight;
-          state.targetHeight = Math.round(state.targetWidth / state.aspectRatio);
-          updateDimensionInputs();
-          renderPreview();
-        }
-      });
-    }
-
-    // =========================================
-    // OUTPUT FORMAT
-    // =========================================
-    function renderFormatButtons() {
-      const row = $('#format-row');
-      row.innerHTML = FORMATS.map(f =>
-        `<button class="format-btn ${f.id === state.outputFormat ? 'active' : ''}" data-format="${f.id}" type="button">${f.label}</button>`
-      ).join('');
-
-      row.addEventListener('click', (e) => {
-        const btn = e.target.closest('.format-btn');
-        if (!btn) return;
-        state.outputFormat = btn.dataset.format;
-        document.querySelectorAll('.format-btn').forEach(b => b.classList.toggle('active', b.dataset.format === state.outputFormat));
-        updateQualityVisibility();
-        renderPreview();
-      });
-    }
-
-    function updateQualityVisibility() {
-      const fmt = FORMATS.find(f => f.id === state.outputFormat);
-      qualityRow.classList.toggle('visible', fmt && fmt.hasQuality);
-    }
-
-    function setupQualitySlider() {
-      qualitySlider.addEventListener('input', () => {
-        state.quality = parseInt(qualitySlider.value) / 100;
-        qualityValue.textContent = qualitySlider.value + '%';
-        debouncedRender();
-      });
-    }
-
-    // =========================================
-    // RESIZE & RENDER PREVIEW
-    // =========================================
-    let renderTimeout = null;
-    function debouncedRender() {
-      clearTimeout(renderTimeout);
-      renderTimeout = setTimeout(renderPreview, 150);
-    }
-
-    function renderPreview() {
-      if (!state.originalImage) return;
-
-      const w = state.targetWidth;
-      const h = state.targetHeight;
-      if (!w || !h || w < 1 || h < 1) return;
-
-      canvas.width = w;
-      canvas.height = h;
-
-      // Use high-quality interpolation
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-
-      ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(state.originalImage, 0, 0, w, h);
-
-      // Get blob for size estimation and download
-      const fmt = FORMATS.find(f => f.id === state.outputFormat);
-      const mimeType = fmt ? fmt.mime : 'image/jpeg';
-      const quality = fmt && fmt.hasQuality ? state.quality : undefined;
-
-      canvas.toBlob((blob) => {
-        if (!blob) return;
-        state.resizedBlob = blob;
-
-        // Update preview image
-        const url = URL.createObjectURL(blob);
-        previewImage.onload = () => URL.revokeObjectURL(url);
-        previewImage.src = url;
-
-        // Update output info
-        $('#output-filesize').textContent = formatFileSize(blob.size);
-        $('#preview-dimensions').textContent = `${w} × ${h}`;
-      }, mimeType, quality);
-    }
-
-    // =========================================
-    // DOWNLOAD
-    // =========================================
-    function setupDownload() {
-      downloadBtn.addEventListener('click', () => {
-        if (!state.resizedBlob) {
-          showToast('No image to download');
-          return;
-        }
-
-        const ext = state.outputFormat === 'jpeg' ? 'jpg' : state.outputFormat;
-        const baseName = state.originalFile.name.replace(/\.[^/.]+$/, '');
-        const filename = `${baseName}_${state.targetWidth}x${state.targetHeight}.${ext}`;
-
-        const url = URL.createObjectURL(state.resizedBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        showToast('Image downloaded');
-      });
-    }
-
-    // =========================================
-    // COPY TO CLIPBOARD
-    // =========================================
-    function setupCopy() {
-      copyBtn.addEventListener('click', async () => {
-        if (!state.resizedBlob) {
-          showToast('No image to copy');
-          return;
-        }
-
-        try {
-          // ClipboardItem requires PNG for most browsers
-          let blobToCopy = state.resizedBlob;
-          if (state.resizedBlob.type !== 'image/png') {
-            // Re-render as PNG for clipboard
-            blobToCopy = await new Promise((resolve) => {
-              canvas.toBlob((b) => resolve(b), 'image/png');
-            });
-          }
-
-          await navigator.clipboard.write([
-            new ClipboardItem({ 'image/png': blobToCopy })
-          ]);
-
-          copyBtn.classList.add('copied');
-          copyBtn.innerHTML = '<span>✓</span> Copied!';
-          showToast('Image copied to clipboard');
-
-          setTimeout(() => {
-            copyBtn.classList.remove('copied');
-            copyBtn.innerHTML = '<span>📋</span> Copy to Clipboard';
-          }, 2000);
-        } catch (err) {
-          console.error('Copy failed:', err);
-          showToast('Copy not supported in this browser');
-        }
-      });
-    }
-
-    // =========================================
-    // UTILITIES
-    // =========================================
-    function formatFileSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
-    }
-
-    function truncateFilename(name, maxLen) {
-      if (name.length <= maxLen) return name;
-      const ext = name.split('.').pop();
-      const base = name.substring(0, maxLen - ext.length - 4);
-      return base + '….' + ext;
-    }
-
-    let toastTimer = null;
-    function showToast(message) {
-      toastEl.textContent = message;
-      toastEl.classList.add('visible');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toastEl.classList.remove('visible');
-      }, 2500);
-    }
-
-    // =========================================
-    // KEYBOARD SHORTCUTS
-    // =========================================
-    document.addEventListener('keydown', (e) => {
-      // Cmd/Ctrl+S to download
-      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
-        e.preventDefault();
-        if (state.resizedBlob) downloadBtn.click();
-      }
-      // Cmd/Ctrl+C when not in input to copy
-      if ((e.metaKey || e.ctrlKey) && e.key === 'c' && document.activeElement.tagName !== 'INPUT') {
-        // Only intercept if workspace is active
-        if (workspace.classList.contains('active')) {
-          // Don't prevent default - let normal copy work if text is selected
-          const selection = window.getSelection();
-          if (!selection || selection.toString().length === 0) {
-            e.preventDefault();
-            copyBtn.click();
-          }
-        }
-      }
+    // Mode tabs
+    selAll('.mode-tab').forEach(function(t){
+      t.addEventListener('click',function(){switchMode(t.dataset.mode)});
     });
-
-    // =========================================
-    // DRAG-AND-DROP ANYWHERE (when workspace is open)
-    // =========================================
-    document.addEventListener('dragover', (e) => {
-      if (workspace.classList.contains('active')) {
-        e.preventDefault();
-      }
-    });
-
-    document.addEventListener('drop', (e) => {
-      if (workspace.classList.contains('active')) {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-          loadImage(file);
-        }
-      }
-    });
-
-    // =========================================
-    // INIT
-    // =========================================
-    function init() {
-      initTheme();
-      setupDropzone();
-      renderPresets();
-      setupDimensionInputs();
-      setupLockButton();
-      renderFormatButtons();
-      updateQualityVisibility();
-      setupQualitySlider();
-      setupDownload();
-      setupCopy();
+    function switchMode(mode){
+      S.mode=mode;
+      selAll('.mode-tab').forEach(function(t){t.classList.toggle('active',t.dataset.mode===mode)});
+      selAll('.mode-panel').forEach(function(p){p.classList.toggle('active',p.id==='panel-'+mode)});
+      sel('#preview-panel').style.display=mode==='crop'?'none':'';
+      sel('#crop-editor').style.display=mode==='crop'?'':'none';
+      if(!S.img)return;
+      if(mode==='scale')renderScale();
+      else if(mode==='crop'){updateCropBox();renderCrop()}
+      else if(mode==='compress')runCompress();
     }
 
-    init();
+    // === SCALE ===
+    var swI=sel('#scale-width'),shI=sel('#scale-height');
+    function ratio(){return S.ow/S.oh}
+    swI.addEventListener('input',function(){
+      var w=parseInt(swI.value);if(!w||w<1)return;
+      S.sw=w;S.sh=Math.round(w/ratio());shI.value=S.sh;updateScaleInfo();debounce('scale',renderScale,150);
+    });
+    shI.addEventListener('input',function(){
+      var h=parseInt(shI.value);if(!h||h<1)return;
+      S.sh=h;S.sw=Math.round(h*ratio());swI.value=S.sw;updateScaleInfo();debounce('scale',renderScale,150);
+    });
+    swI.addEventListener('blur',function(){finalizeScale('w')});
+    shI.addEventListener('blur',function(){finalizeScale('h')});
+    function finalizeScale(axis){
+      var r=ratio();
+      if(axis==='w'){var w=parseInt(swI.value)||S.ow;w=clamp(w,1,10000);S.sw=w;S.sh=Math.round(w/r)}
+      else{var h=parseInt(shI.value)||S.oh;h=clamp(h,1,10000);S.sh=h;S.sw=Math.round(h*r)}
+      updateScaleInputs();renderScale();
+    }
+    function updateScaleInputs(){swI.value=S.sw;shI.value=S.sh;updateScaleInfo()}
+    function updateScaleInfo(){
+      var p=((S.sw/S.ow)*100).toFixed(0);
+      sel('#scale-info').innerHTML='Scale: <span class="scale-pct">'+p+'%</span>';
+    }
+    buildFormatRow('scale-format-row','scale-quality-row','scale-quality-slider','scale-quality-value',
+      function(){return S.sFmt},function(f){S.sFmt=f},function(){return S.sQ},function(q){S.sQ=q},renderScale);
+    sel('#scale-download-btn').addEventListener('click',function(){dlBlob(S.sBlob,S.sFmt,S.sw,S.sh)});
+    sel('#scale-copy-btn').addEventListener('click',function(){cpBlob(S.sBlob,'#scale-copy-btn')});
+
+    function renderScale(){
+      if(!S.img||!S.sw||!S.sh)return;
+      canvas.width=S.sw;canvas.height=S.sh;
+      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+      ctx.clearRect(0,0,S.sw,S.sh);ctx.drawImage(S.img,0,0,S.sw,S.sh);
+      var fmt=FORMATS.find(function(f){return f.id===S.sFmt});
+      canvas.toBlob(function(blob){
+        if(!blob)return;S.sBlob=blob;showPreview(blob,S.sw,S.sh);
+      },fmt.mime,fmt.hasQ?S.sQ:undefined);
+    }
+
+    // === CROP ===
+    var grid=sel('#presets-grid');
+    grid.innerHTML=PRESETS.map(function(p,i){
+      return '<button class="preset-btn" data-i="'+i+'" type="button"><span class="preset-name">'+p.name+'</span><span class="preset-size">'+p.w+' \u00d7 '+p.h+'</span></button>';
+    }).join('');
+    grid.addEventListener('click',function(e){
+      var b=e.target.closest('.preset-btn');if(!b)return;
+      var i=+b.dataset.i;S.preset=i;S.ctw=PRESETS[i].w;S.cth=PRESETS[i].h;
+      sel('#crop-width').value=S.ctw;sel('#crop-height').value=S.cth;
+      selAll('.preset-btn').forEach(function(b2,j){b2.classList.toggle('active',j===i)});
+      initCropForTarget(S.ctw,S.cth);
+      if(S.mode==='crop'){updateCropBox();renderCrop()}
+    });
+    var cwI=sel('#crop-width'),chI=sel('#crop-height');
+    cwI.value=S.ctw;chI.value=S.cth;
+    function onCustomCrop(){
+      var w=parseInt(cwI.value),h=parseInt(chI.value);
+      if(!w||!h||w<1||h<1)return;
+      S.ctw=clamp(w,1,10000);S.cth=clamp(h,1,10000);
+      S.preset=null;selAll('.preset-btn').forEach(function(b){b.classList.remove('active')});
+      initCropForTarget(S.ctw,S.cth);
+      if(S.mode==='crop'){updateCropBox();renderCrop()}
+    }
+    cwI.addEventListener('change',onCustomCrop);chI.addEventListener('change',onCustomCrop);
+    buildFormatRow('crop-format-row','crop-quality-row','crop-quality-slider','crop-quality-value',
+      function(){return S.cFmt},function(f){S.cFmt=f},function(){return S.cQ},function(q){S.cQ=q},renderCrop);
+    sel('#crop-download-btn').addEventListener('click',function(){dlBlob(S.cBlob,S.cFmt,S.ctw,S.cth)});
+    sel('#crop-copy-btn').addEventListener('click',function(){cpBlob(S.cBlob,'#crop-copy-btn')});
+
+    function initCropForTarget(tw,th){
+      var r=tw/th,cw,ch;
+      if(S.ow/S.oh>r){ch=S.oh;cw=Math.round(S.oh*r)}else{cw=S.ow;ch=Math.round(S.ow/r)}
+      S.cw=cw;S.ch=ch;S.cx=Math.round((S.ow-cw)/2);S.cy=Math.round((S.oh-ch)/2);
+    }
+    function updateCropBox(){
+      var di=sel('#crop-image');if(!di.naturalWidth)return;
+      var sx=di.clientWidth/S.ow,sy=di.clientHeight/S.oh;
+      var box=sel('#crop-box');
+      box.style.left=(S.cx*sx)+'px';box.style.top=(S.cy*sy)+'px';
+      box.style.width=(S.cw*sx)+'px';box.style.height=(S.ch*sy)+'px';
+      sel('#crop-output-dims').textContent=S.ctw+' \u00d7 '+S.cth;
+    }
+    // Crop drag
+    (function(){
+      var box=sel('#crop-box'),dragging=false,resizing=false,handle='';
+      var mx0,my0,bx0,by0,bw0,bh0;
+      function sc(){var i=sel('#crop-image');return{x:i.clientWidth/S.ow,y:i.clientHeight/S.oh}}
+      box.addEventListener('pointerdown',function(e){
+        e.preventDefault();var h=e.target.closest('.crop-handle');var s=sc();
+        mx0=e.clientX;my0=e.clientY;bx0=S.cx*s.x;by0=S.cy*s.y;bw0=S.cw*s.x;bh0=S.ch*s.y;
+        if(h){resizing=true;handle=h.dataset.handle}else{dragging=true}
+        document.addEventListener('pointermove',onMove);document.addEventListener('pointerup',onUp);
+      });
+      function onMove(e){
+        e.preventDefault();var s=sc(),dx=e.clientX-mx0,dy=e.clientY-my0,r=S.ctw/S.cth;
+        if(dragging){
+          S.cx=clamp(Math.round((bx0+dx)/s.x),0,S.ow-S.cw);
+          S.cy=clamp(Math.round((by0+dy)/s.y),0,S.oh-S.ch);
+          updateCropBox();debounce('crop',renderCrop,80);
+        }
+        if(resizing){
+          var nw,nh,nx,ny;
+          if(handle==='se'){nw=(bw0+dx)/s.x;nh=nw/r;nx=S.cx;ny=S.cy}
+          else if(handle==='sw'){nw=(bw0-dx)/s.x;nh=nw/r;nx=(bx0+dx)/s.x;ny=S.cy}
+          else if(handle==='ne'){nw=(bw0+dx)/s.x;nh=nw/r;nx=S.cx;ny=(by0-(nh*s.y-bh0))/s.y}
+          else{nw=(bw0-dx)/s.x;nh=nw/r;nx=(bx0+dx)/s.x;ny=(by0-(nh*s.y-bh0))/s.y}
+          if(nw<20||nh<20)return;
+          nx=Math.max(0,nx);ny=Math.max(0,ny);
+          if(nx+nw>S.ow){nw=S.ow-nx;nh=nw/r}
+          if(ny+nh>S.oh){nh=S.oh-ny;nw=nh*r}
+          S.cx=Math.round(nx);S.cy=Math.round(ny);S.cw=Math.round(nw);S.ch=Math.round(nh);
+          updateCropBox();debounce('crop',renderCrop,80);
+        }
+      }
+      function onUp(){
+        dragging=false;resizing=false;
+        document.removeEventListener('pointermove',onMove);document.removeEventListener('pointerup',onUp);
+        renderCrop();
+      }
+    })();
+    sel('#crop-image').addEventListener('load',function(){requestAnimationFrame(function(){updateCropBox();renderCrop()})});
+    window.addEventListener('resize',function(){if(S.mode==='crop')updateCropBox()});
+
+    function renderCrop(){
+      if(!S.img||!S.cw||!S.ch)return;
+      canvas.width=S.ctw;canvas.height=S.cth;
+      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+      ctx.clearRect(0,0,S.ctw,S.cth);
+      ctx.drawImage(S.img,S.cx,S.cy,S.cw,S.ch,0,0,S.ctw,S.cth);
+      var fmt=FORMATS.find(function(f){return f.id===S.cFmt});
+      canvas.toBlob(function(blob){
+        if(!blob)return;S.cBlob=blob;
+        sel('#crop-output-filesize').textContent=fmtSize(blob.size);
+      },fmt.mime,fmt.hasQ?S.cQ:undefined);
+    }
+
+    // === COMPRESS ===
+    var tsI=sel('#target-size-input'),tuS=sel('#target-size-unit');
+    function triggerCompress(){
+      var v=parseFloat(tsI.value);if(!v||v<=0)return;
+      S.xTarget=tuS.value==='MB'?v*1048576:v*1024;runCompress();
+    }
+    tsI.addEventListener('change',triggerCompress);tuS.addEventListener('change',triggerCompress);
+    selAll('.compress-preset-btn').forEach(function(b){
+      b.addEventListener('click',function(){tsI.value=b.dataset.size;tuS.value=b.dataset.unit;triggerCompress()});
+    });
+    buildFormatRow('compress-format-row',null,null,null,
+      function(){return S.xFmt},function(f){S.xFmt=f},null,null,runCompress);
+    sel('#compress-download-btn').addEventListener('click',function(){
+      if(!S.xBlob){showToast('Set a target file size first');return}
+      dlBlob(S.xBlob,S.xFmt,S.xW||S.ow,S.xH||S.oh);
+    });
+    sel('#compress-copy-btn').addEventListener('click',function(){cpBlob(S.xBlob,'#compress-copy-btn')});
+
+    async function runCompress(){
+      if(!S.img||!S.xTarget)return;
+      var st=sel('#compress-status'),rs=sel('#compress-result');
+      st.textContent='Compressing\u2026';st.className='compress-status';rs.style.display='none';
+      var fmt=FORMATS.find(function(f){return f.id===S.xFmt});
+      var target=S.xTarget;
+      function render(w,h,q){
+        return new Promise(function(resolve){
+          canvas.width=w;canvas.height=h;ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+          ctx.clearRect(0,0,w,h);ctx.drawImage(S.img,0,0,w,h);
+          canvas.toBlob(function(b){resolve(b)},fmt.mime,fmt.hasQ?q:undefined);
+        });
+      }
+      var best=null,fw=S.ow,fh=S.oh,fq=1;
+      if(fmt.hasQ){
+        var lo=.05,hi=1;
+        for(var i=0;i<10;i++){
+          var mid=(lo+hi)/2;var b=await render(fw,fh,mid);if(!b)break;
+          if(b.size<=target){best=b;fq=mid;lo=mid}else hi=mid;
+        }
+      }else{best=await render(fw,fh,1)}
+      if(!best||best.size>target){
+        var scale=1;
+        for(var j=0;j<20;j++){
+          scale*=.82;var w=Math.max(1,Math.round(S.ow*scale));var h=Math.max(1,Math.round(S.oh*scale));
+          var q=fmt.hasQ?(best?fq:.8):1;var b2=await render(w,h,q);if(!b2)break;
+          if(b2.size<=target){best=b2;fw=w;fh=h;fq=q;break}
+          if(w<16||h<16){best=b2;fw=w;fh=h;break}
+        }
+      }
+      if(best){
+        S.xBlob=best;S.xW=fw;S.xH=fh;showPreview(best,fw,fh);
+        rs.style.display='block';
+        sel('#compress-result-size').textContent=fmtSize(best.size);
+        var qStr=fmt.hasQ?' \u00b7 Quality: '+Math.round(fq*100)+'%':'';
+        sel('#compress-result-detail').textContent=fw+' \u00d7 '+fh+qStr;
+        if(best.size<=target){st.textContent='\u2713 Under target size';st.className='compress-status success'}
+        else{st.textContent='\u26a0 Smallest achievable size';st.className='compress-status warning'}
+      }
+    }
+
+    // === SHARED ===
+    function showPreview(blob,w,h){
+      var url=URL.createObjectURL(blob);var img=sel('#preview-image');
+      img.onload=function(){URL.revokeObjectURL(url)};img.src=url;
+      sel('#preview-dimensions').textContent=w+' \u00d7 '+h;
+      sel('#output-filesize').textContent=fmtSize(blob.size);
+    }
+    function buildFormatRow(rowId,qRowId,sliderId,valId,getFmt,setFmt,getQ,setQ,onChange){
+      var row=sel('#'+rowId);
+      row.innerHTML=FORMATS.map(function(f){
+        return '<button class="format-btn '+(f.id===getFmt()?'active':'')+'" data-fmt="'+f.id+'" type="button">'+f.label+'</button>';
+      }).join('');
+      row.addEventListener('click',function(e){
+        var b=e.target.closest('.format-btn');if(!b)return;
+        setFmt(b.dataset.fmt);
+        row.querySelectorAll('.format-btn').forEach(function(b2){b2.classList.toggle('active',b2.dataset.fmt===getFmt())});
+        if(qRowId){var f=FORMATS.find(function(x){return x.id===getFmt()});sel('#'+qRowId).classList.toggle('visible',f&&f.hasQ)}
+        if(onChange)onChange();
+      });
+      if(sliderId&&valId&&getQ&&setQ){
+        var sl=sel('#'+sliderId),vl=sel('#'+valId);
+        sl.addEventListener('input',function(){
+          setQ(parseInt(sl.value)/100);vl.textContent=sl.value+'%';
+          if(onChange)debounce('q',onChange,150);
+        });
+        if(qRowId){var f=FORMATS.find(function(x){return x.id===getFmt()});sel('#'+qRowId).classList.toggle('visible',f&&f.hasQ)}
+      }
+    }
+    function dlBlob(blob,fmtId,w,h){
+      if(!blob){showToast('Nothing to download');return}
+      var ext=fmtId==='jpeg'?'jpg':fmtId;
+      var base=S.file.name.replace(/\.[^/.]+$/,'');
+      var url=URL.createObjectURL(blob);var a=document.createElement('a');
+      a.href=url;a.download=base+'_'+w+'x'+h+'.'+ext;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+      URL.revokeObjectURL(url);showToast('Image downloaded');
+    }
+    async function cpBlob(blob,btnSel){
+      if(!blob){showToast('Nothing to copy');return}
+      try{
+        var b=blob;
+        if(blob.type!=='image/png')b=await new Promise(function(r){canvas.toBlob(r,'image/png')});
+        await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);
+        var btn=sel(btnSel);btn.classList.add('copied');btn.innerHTML='<span>\u2713</span> Copied!';
+        showToast('Copied to clipboard');
+        setTimeout(function(){btn.classList.remove('copied');btn.innerHTML='<span>&#128203;</span> Copy to Clipboard'},2000);
+      }catch(e){showToast('Copy not supported in this browser')}
+    }
+    function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(2)+' MB'}
+    function truncName(n,m){if(n.length<=m)return n;var e=n.split('.').pop();return n.substring(0,m-e.length-4)+'\u2026.'+e}
+    function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
+    var _tt=null;
+    function showToast(msg){var t=sel('#toast');t.textContent=msg;t.classList.add('visible');clearTimeout(_tt);_tt=setTimeout(function(){t.classList.remove('visible')},2500)}
+    var _db={};
+    function debounce(k,fn,ms){clearTimeout(_db[k]);_db[k]=setTimeout(fn,ms)}
+    document.addEventListener('keydown',function(e){
+      if((e.metaKey||e.ctrlKey)&&e.key==='s'){e.preventDefault();var b=sel('#'+S.mode+'-download-btn');if(b)b.click()}
+    });
+  })();
   </script>
 </body>
 </html>
