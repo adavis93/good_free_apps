@@ -599,10 +599,8 @@
     // DATA LOADING
     // =========================================
     async function loadDashboardData() {
-      if (!API_ENDPOINT || API_ENDPOINT.includes('alexanderdavis0293')) {
+      if (!API_ENDPOINT || API_ENDPOINT.includes('YOUR-SUBDOMAIN')) {
         console.log('[Admin] No API endpoint configured. Using placeholder data.');
-        document.getElementById('auth-error').textContent = 'API endpoint not configured in admin.html';
-        document.getElementById('auth-error').style.display = 'block';
         return;
       }
 
