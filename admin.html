@@ -452,9 +452,9 @@
         <span class="dash-badge">All Apps</span>
       </div>
       <div class="dash-header-actions">
-        <button class="icon-btn" onclick="window.location.href='index.html'" title="Back to hub">â†</button>
-        <button class="icon-btn" onclick="refreshData()" title="Refresh data">â†»</button>
-        <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">â—</button>
+        <button class="icon-btn" onclick="window.location.href='index.html'" title="Back to hub">←</button>
+        <button class="icon-btn" onclick="refreshData()" title="Refresh data">↻</button>
+        <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
       </div>
     </header>
 
@@ -599,7 +599,7 @@
     // DATA LOADING
     // =========================================
     async function loadDashboardData() {
-      if (!API_ENDPOINT || API_ENDPOINT.includes('YOUR-SUBDOMAIN')) {
+      if (!API_ENDPOINT || API_ENDPOINT.includes('alexanderdavis0293')) {
         console.log('[Admin] No API endpoint configured. Using placeholder data.');
         document.getElementById('auth-error').textContent = 'API endpoint not configured in admin.html';
         document.getElementById('auth-error').style.display = 'block';
