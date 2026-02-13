@@ -793,7 +793,7 @@
       document.getElementById('email-field').classList.remove('visible');
     }
 
-    function submitFeedback() {
+    async function submitFeedback() {
       const category = document.getElementById('feedback-category').value;
       const text = document.getElementById('feedback-text').value.trim();
       const anonymous = document.getElementById('anonymous-toggle').checked;
@@ -810,19 +810,29 @@
         text,
         anonymous,
         email,
+        app: 'hub',
         timestamp: new Date().toISOString()
       };
 
-      // TODO: Send to backend
-      // fetch('/api/feedback', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(feedback)
-      // });
+      // Send to backend
+      try {
+        const response = await fetch('https://good-free-apps-api.alexanderdavis0293.workers.dev/api/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(feedback)
+        });
 
-      console.log('Feedback submitted:', feedback);
-      closeFeedbackModal();
-      alert('Thank you for your feedback!');
+        if (!response.ok) {
+          throw new Error('Failed to submit feedback');
+        }
+
+        console.log('Feedback submitted:', feedback);
+        closeFeedbackModal();
+        alert('Thank you for your feedback!');
+      } catch (error) {
+        console.error('Feedback submission error:', error);
+        alert('Failed to submit feedback. Please try again.');
+      }
     }
 
     // Close modal on overlay click
