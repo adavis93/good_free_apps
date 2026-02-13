@@ -22,10 +22,10 @@
   // =========================================
   const CONFIG = {
     // Set this to your Cloudflare Worker URL (or other backend)
-    ENDPOINT: '',  // e.g. 'https://your-worker.workers.dev/api/track'
+    ENDPOINT: 'https://good-free-apps-api.alexanderdavis0293.workers.dev',  // e.g. 'https://your-worker.workers.dev/api/track'
 
     // Set to true once your backend is ready
-    ENABLED: false,
+    ENABLED: true,
 
     // Batch events and send periodically (ms)
     BATCH_INTERVAL: 5000,

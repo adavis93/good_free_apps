@@ -1,0 +1,13 @@
+name = "good-free-apps-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# KV Namespace for storing analytics and feedback data
+[[kv_namespaces]]
+binding = "ANALYTICS_KV"
+id = "cfbe008502ce48ef94a0429a030a8079" # You'll replace this after creating the KV namespace
+
+# Environment variables (secrets)
+# Set these using: wrangler secret put ADMIN_TOKEN
+# [vars]
+# ADMIN_TOKEN will be set as a secret, not here

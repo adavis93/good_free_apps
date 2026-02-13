@@ -545,29 +545,23 @@
     // =========================================
     // CONFIGURATION
     // =========================================
-    // Set your admin token here (in production, validate server-side)
-    const ADMIN_TOKEN = 'admin';  // Change this!
 
     // Set your analytics API endpoint
-    const API_ENDPOINT = '';  // e.g. 'https://your-worker.workers.dev/api'
+    const API_ENDPOINT = 'https://good-free-apps-api.alexanderdavis0293.workers.dev';  // e.g. 'https://your-worker.workers.dev/api'
 
     // =========================================
     // AUTHENTICATION
     // =========================================
     function authenticate() {
       const input = document.getElementById('auth-token');
-      const error = document.getElementById('auth-error');
-
-      if (input.value === ADMIN_TOKEN) {
-        document.getElementById('auth-gate').style.display = 'none';
-        document.getElementById('dashboard').classList.add('active');
-        sessionStorage.setItem('admin_auth', 'true');
-        loadDashboardData();
-      } else {
-        error.style.display = 'block';
-        input.value = '';
-        input.focus();
-      }
+      const token = input.value; // Use the typed value, don't compare to hardcoded token
+      
+      // Remove client-side validation, let the Worker handle it
+      document.getElementById('auth-gate').style.display = 'none';
+      document.getElementById('dashboard').classList.add('active');
+      sessionStorage.setItem('admin_auth', 'true');
+      sessionStorage.setItem('admin_token', token); // Store for API calls
+      loadDashboardData();
     }
 
     // Check if already authenticated this session
@@ -598,15 +592,16 @@
     // =========================================
     // DATA LOADING
     // =========================================
-    async function loadDashboardData() {
-      if (!API_ENDPOINT) {
+    if (!API_ENDPOINT) {
         console.log('[Admin] No API endpoint configured. Using placeholder data.');
         return;
       }
 
+      const token = sessionStorage.getItem('admin_token');
+      
       try {
         const response = await fetch(API_ENDPOINT + '/dashboard', {
-          headers: { 'Authorization': 'Bearer ' + ADMIN_TOKEN }
+          headers: { 'Authorization': 'Bearer ' + token }
         });
 
         if (!response.ok) throw new Error('API error: ' + response.status);
@@ -618,7 +613,6 @@
       } catch (err) {
         console.error('[Admin] Failed to load dashboard data:', err);
       }
-    }
 
     function refreshData() {
       loadDashboardData();
