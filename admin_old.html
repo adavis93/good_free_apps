@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard â€” Good Free Apps</title>
+  <title>Admin Dashboard — Good Free Apps</title>
 
   <!-- Shared Design System -->
   <link rel="stylesheet" href="shared/design-tokens.css">
@@ -433,7 +433,7 @@
         type="password"
         class="auth-input"
         id="auth-token"
-        placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+        placeholder="••••••••"
         onkeydown="if(event.key==='Enter') authenticate()"
         autofocus
       >
@@ -452,9 +452,9 @@
         <span class="dash-badge">All Apps</span>
       </div>
       <div class="dash-header-actions">
-        <button class="icon-btn" onclick="window.location.href='index.html'" title="Back to hub">â†</button>
-        <button class="icon-btn" onclick="refreshData()" title="Refresh data">â†»</button>
-        <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">â—</button>
+        <button class="icon-btn" onclick="window.location.href='index.html'" title="Back to hub">←</button>
+        <button class="icon-btn" onclick="refreshData()" title="Refresh data">↻</button>
+        <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">◐</button>
       </div>
     </header>
 
@@ -470,22 +470,22 @@
       <div class="stats-grid" id="stats-grid">
         <div class="stat-card">
           <div class="stat-label">Total Page Views</div>
-          <div class="stat-value" id="stat-views">â€”</div>
+          <div class="stat-value" id="stat-views">—</div>
           <div class="stat-trend neutral" id="trend-views">Loading...</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Unique Sessions</div>
-          <div class="stat-value" id="stat-sessions">â€”</div>
+          <div class="stat-value" id="stat-sessions">—</div>
           <div class="stat-trend neutral" id="trend-sessions">Loading...</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Active Apps</div>
-          <div class="stat-value" id="stat-apps">â€”</div>
-          <div class="stat-trend neutral" id="trend-apps">â€”</div>
+          <div class="stat-value" id="stat-apps">—</div>
+          <div class="stat-trend neutral" id="trend-apps">—</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Feedback Items</div>
-          <div class="stat-value" id="stat-feedback">â€”</div>
+          <div class="stat-value" id="stat-feedback">—</div>
           <div class="stat-trend neutral" id="trend-feedback">Loading...</div>
         </div>
       </div>
@@ -545,28 +545,22 @@
     // =========================================
     // CONFIGURATION
     // =========================================
+
     // Set your analytics API endpoint
-    const API_ENDPOINT = 'https://good-free-apps-api.alexanderdavis0293.workers.dev/api';  // Replace YOUR-SUBDOMAIN with your actual Cloudflare subdomain
+    const API_ENDPOINT = 'https://good-free-apps-api.alexanderdavis0293.workers.dev';  // e.g. 'https://your-worker.workers.dev/api'
 
     // =========================================
-    // AUTHENTICATION (Option B - No hardcoded token)
+    // AUTHENTICATION
     // =========================================
     function authenticate() {
       const input = document.getElementById('auth-token');
-      const token = input.value.trim();
-
-      if (!token) {
-        const error = document.getElementById('auth-error');
-        error.textContent = 'Please enter a token';
-        error.style.display = 'block';
-        return;
-      }
-
-      // No client-side validation - let the Worker handle it
+      const token = input.value; // Use the typed value, don't compare to hardcoded token
+      
+      // Remove client-side validation, let the Worker handle it
       document.getElementById('auth-gate').style.display = 'none';
       document.getElementById('dashboard').classList.add('active');
       sessionStorage.setItem('admin_auth', 'true');
-      sessionStorage.setItem('admin_token', token);
+      sessionStorage.setItem('admin_token', token); // Store for API calls
       loadDashboardData();
     }
 
@@ -598,41 +592,19 @@
     // =========================================
     // DATA LOADING
     // =========================================
-    async function loadDashboardData() {
-      if (!API_ENDPOINT || API_ENDPOINT.includes('YOUR-SUBDOMAIN')) {
+    if (!API_ENDPOINT) {
         console.log('[Admin] No API endpoint configured. Using placeholder data.');
-        document.getElementById('auth-error').textContent = 'API endpoint not configured in admin.html';
-        document.getElementById('auth-error').style.display = 'block';
         return;
       }
 
       const token = sessionStorage.getItem('admin_token');
-
-      if (!token) {
-        console.error('[Admin] No token found in session');
-        return;
-      }
-
+      
       try {
         const response = await fetch(API_ENDPOINT + '/dashboard', {
           headers: { 'Authorization': 'Bearer ' + token }
         });
 
-        if (response.status === 401) {
-          // Unauthorized - wrong token
-          sessionStorage.removeItem('admin_auth');
-          sessionStorage.removeItem('admin_token');
-          document.getElementById('dashboard').classList.remove('active');
-          document.getElementById('auth-gate').style.display = 'flex';
-          const error = document.getElementById('auth-error');
-          error.textContent = 'Invalid token. Try again.';
-          error.style.display = 'block';
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error('API error: ' + response.status);
-        }
+        if (!response.ok) throw new Error('API error: ' + response.status);
 
         const data = await response.json();
         renderStats(data.overview);
@@ -640,11 +612,7 @@
         renderFeedback(data.feedback);
       } catch (err) {
         console.error('[Admin] Failed to load dashboard data:', err);
-        const error = document.getElementById('auth-error');
-        error.textContent = 'Failed to connect to API. Check console for details.';
-        error.style.display = 'block';
       }
-    }
 
     function refreshData() {
       loadDashboardData();
