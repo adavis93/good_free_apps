@@ -123,6 +123,9 @@
     .btn-copy{width:100%;padding:.9375rem;background:transparent;color:var(--color-text-primary);border:1px solid var(--color-border);border-radius:var(--radius-md);font-family:var(--font-primary);font-weight:var(--font-weight-semibold);font-size:var(--font-size-sm);cursor:pointer;transition:all var(--transition-normal);display:flex;align-items:center;justify-content:center;gap:.5rem}
     .btn-copy:hover{border-color:var(--color-accent);color:var(--color-accent);background:var(--color-accent-subtle)}
     .btn-copy.copied{border-color:var(--color-success);color:var(--color-success);background:rgba(22,163,74,.08)}
+    .btn-share{width:100%;padding:.9375rem;background:transparent;color:var(--color-text-primary);border:1px solid var(--color-border);border-radius:var(--radius-md);font-family:var(--font-primary);font-weight:var(--font-weight-semibold);font-size:var(--font-size-sm);cursor:pointer;transition:all var(--transition-normal);display:none;align-items:center;justify-content:center;gap:.5rem}
+    .btn-share:hover{border-color:var(--color-accent);color:var(--color-accent);background:var(--color-accent-subtle)}
+    .btn-share.visible{display:flex}
     .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(100px);background:var(--color-primary);color:var(--color-background);padding:.875rem 1.5rem;border-radius:var(--radius-md);font-size:var(--font-size-sm);font-weight:var(--font-weight-medium);box-shadow:var(--shadow-lg);z-index:1000;opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none}
     .toast.visible{transform:translateX(-50%) translateY(0);opacity:1}
     @media(max-width:900px){.workspace-grid{grid-template-columns:1fr}.app-container{padding:1.5rem 1rem 3rem}.app-header{margin:.75rem 1rem 0;padding:1rem 1.25rem}.info-bar{flex-direction:column;align-items:flex-start}.info-bar-left{width:100%}.btn-change-image{width:100%;text-align:center}}
@@ -181,11 +184,13 @@
 
       <div class="workspace-grid">
         <div>
+          <!-- Preview for scale + compress -->
           <div class="preview-panel" id="preview-panel">
             <div class="preview-header"><span class="preview-title">Preview</span><span class="preview-dimensions" id="preview-dimensions">&mdash;</span></div>
             <div class="preview-area checkerboard-bg"><img id="preview-image" alt="Resized preview"></div>
             <div class="preview-footer"><span class="output-size"><span class="output-size-label">Est. size: </span><span id="output-filesize">&mdash;</span></span></div>
           </div>
+          <!-- Crop editor -->
           <div class="crop-editor" id="crop-editor">
             <div class="crop-header"><span class="crop-title">Position Your Crop</span><span class="crop-hint">Drag to move &middot; corners to resize</span></div>
             <div class="crop-canvas-wrapper" id="crop-wrapper">
@@ -226,6 +231,7 @@
             <div class="action-buttons">
               <button class="btn-download" id="scale-download-btn" type="button"><span>&#11015;</span> Download</button>
               <button class="btn-copy" id="scale-copy-btn" type="button"><span>&#128203;</span> Copy to Clipboard</button>
+              <button class="btn-share" id="scale-share-btn" type="button"><span>&#128228;</span> Share / Save to Photos</button>
             </div>
           </div>
           <!-- CROP -->
@@ -250,6 +256,7 @@
             <div class="action-buttons">
               <button class="btn-download" id="crop-download-btn" type="button"><span>&#11015;</span> Download</button>
               <button class="btn-copy" id="crop-copy-btn" type="button"><span>&#128203;</span> Copy to Clipboard</button>
+              <button class="btn-share" id="crop-share-btn" type="button"><span>&#128228;</span> Share / Save to Photos</button>
             </div>
           </div>
           <!-- COMPRESS -->
@@ -277,6 +284,7 @@
             <div class="action-buttons">
               <button class="btn-download" id="compress-download-btn" type="button"><span>&#11015;</span> Download</button>
               <button class="btn-copy" id="compress-copy-btn" type="button"><span>&#128203;</span> Copy to Clipboard</button>
+              <button class="btn-share" id="compress-share-btn" type="button"><span>&#128228;</span> Share / Save to Photos</button>
             </div>
           </div>
         </div>
@@ -302,15 +310,19 @@
       {id:'webp',label:'WebP',mime:'image/webp',hasQ:true}
     ];
 
-    // State
-    var S={img:null,file:null,ow:0,oh:0,mode:'scale',
+    var S={img:null,file:null,imgDataUrl:null,ow:0,oh:0,mode:'scale',
       sw:0,sh:0,sFmt:'jpeg',sQ:.92,sBlob:null,
       ctw:1080,cth:1080,cFmt:'jpeg',cQ:.92,cBlob:null,cx:0,cy:0,cw:0,ch:0,preset:null,
       xFmt:'jpeg',xBlob:null,xTarget:0,xW:0,xH:0};
 
     var sel=function(s){return document.querySelector(s)};
     var selAll=function(s){return document.querySelectorAll(s)};
-    var canvas=sel('#resize-canvas'), ctx=canvas.getContext('2d');
+    var canvas=sel('#resize-canvas'),ctx=canvas.getContext('2d');
+
+    // Detect mobile / share API support
+    var canShare=!!(navigator.share && navigator.canShare);
+    // Show share buttons if supported
+    if(canShare){selAll('.btn-share').forEach(function(b){b.classList.add('visible')})}
 
     // Theme
     window.toggleTheme=function(){
@@ -349,6 +361,7 @@
       S.file=file;
       var reader=new FileReader();
       reader.onload=function(ev){
+        S.imgDataUrl=ev.target.result;
         var img=new Image();
         img.onload=function(){
           S.img=img;S.ow=img.naturalWidth;S.oh=img.naturalHeight;
@@ -358,7 +371,15 @@
           sel('#info-filename').textContent=truncName(file.name,28);
           sel('#info-filesize').textContent=fmtSize(file.size);
           sel('#info-dimensions').textContent=S.ow+' \u00d7 '+S.oh;
-          sel('#crop-image').src=ev.target.result;
+
+          // Set crop image source
+          sel('#crop-image').src=S.imgDataUrl;
+
+          // Show original in preview immediately (before canvas render completes)
+          sel('#preview-image').src=S.imgDataUrl;
+          sel('#preview-dimensions').textContent=S.ow+' \u00d7 '+S.oh;
+          sel('#output-filesize').textContent=fmtSize(file.size);
+
           initCropForTarget(S.ctw,S.cth);
           updateScaleInputs();
           switchMode(S.mode);
@@ -377,11 +398,17 @@
       S.mode=mode;
       selAll('.mode-tab').forEach(function(t){t.classList.toggle('active',t.dataset.mode===mode)});
       selAll('.mode-panel').forEach(function(p){p.classList.toggle('active',p.id==='panel-'+mode)});
-      sel('#preview-panel').style.display=mode==='crop'?'none':'';
-      sel('#crop-editor').style.display=mode==='crop'?'':'none';
+
+      // FIX: Use explicit 'block' instead of '' to override CSS display:none
+      sel('#preview-panel').style.display=mode==='crop'?'none':'block';
+      sel('#crop-editor').style.display=mode==='crop'?'block':'none';
+
       if(!S.img)return;
       if(mode==='scale')renderScale();
-      else if(mode==='crop'){updateCropBox();renderCrop()}
+      else if(mode==='crop'){
+        // Give the crop editor a frame to be visible before measuring
+        requestAnimationFrame(function(){updateCropBox();renderCrop()});
+      }
       else if(mode==='compress')runCompress();
     }
 
@@ -413,6 +440,7 @@
       function(){return S.sFmt},function(f){S.sFmt=f},function(){return S.sQ},function(q){S.sQ=q},renderScale);
     sel('#scale-download-btn').addEventListener('click',function(){dlBlob(S.sBlob,S.sFmt,S.sw,S.sh)});
     sel('#scale-copy-btn').addEventListener('click',function(){cpBlob(S.sBlob,'#scale-copy-btn')});
+    sel('#scale-share-btn').addEventListener('click',function(){shareBlob(S.sBlob,S.sFmt,S.sw,S.sh)});
 
     function renderScale(){
       if(!S.img||!S.sw||!S.sh)return;
@@ -436,7 +464,7 @@
       sel('#crop-width').value=S.ctw;sel('#crop-height').value=S.cth;
       selAll('.preset-btn').forEach(function(b2,j){b2.classList.toggle('active',j===i)});
       initCropForTarget(S.ctw,S.cth);
-      if(S.mode==='crop'){updateCropBox();renderCrop()}
+      if(S.mode==='crop'){requestAnimationFrame(function(){updateCropBox();renderCrop()})}
     });
     var cwI=sel('#crop-width'),chI=sel('#crop-height');
     cwI.value=S.ctw;chI.value=S.cth;
@@ -446,13 +474,14 @@
       S.ctw=clamp(w,1,10000);S.cth=clamp(h,1,10000);
       S.preset=null;selAll('.preset-btn').forEach(function(b){b.classList.remove('active')});
       initCropForTarget(S.ctw,S.cth);
-      if(S.mode==='crop'){updateCropBox();renderCrop()}
+      if(S.mode==='crop'){requestAnimationFrame(function(){updateCropBox();renderCrop()})}
     }
     cwI.addEventListener('change',onCustomCrop);chI.addEventListener('change',onCustomCrop);
     buildFormatRow('crop-format-row','crop-quality-row','crop-quality-slider','crop-quality-value',
       function(){return S.cFmt},function(f){S.cFmt=f},function(){return S.cQ},function(q){S.cQ=q},renderCrop);
     sel('#crop-download-btn').addEventListener('click',function(){dlBlob(S.cBlob,S.cFmt,S.ctw,S.cth)});
     sel('#crop-copy-btn').addEventListener('click',function(){cpBlob(S.cBlob,'#crop-copy-btn')});
+    sel('#crop-share-btn').addEventListener('click',function(){shareBlob(S.cBlob,S.cFmt,S.ctw,S.cth)});
 
     function initCropForTarget(tw,th){
       var r=tw/th,cw,ch;
@@ -460,7 +489,8 @@
       S.cw=cw;S.ch=ch;S.cx=Math.round((S.ow-cw)/2);S.cy=Math.round((S.oh-ch)/2);
     }
     function updateCropBox(){
-      var di=sel('#crop-image');if(!di.naturalWidth)return;
+      var di=sel('#crop-image');
+      if(!di.naturalWidth||!di.clientWidth)return;
       var sx=di.clientWidth/S.ow,sy=di.clientHeight/S.oh;
       var box=sel('#crop-box');
       box.style.left=(S.cx*sx)+'px';box.style.top=(S.cy*sy)+'px';
@@ -505,7 +535,11 @@
         renderCrop();
       }
     })();
-    sel('#crop-image').addEventListener('load',function(){requestAnimationFrame(function(){updateCropBox();renderCrop()})});
+    sel('#crop-image').addEventListener('load',function(){
+      requestAnimationFrame(function(){
+        if(S.mode==='crop'){updateCropBox();renderCrop()}
+      });
+    });
     window.addEventListener('resize',function(){if(S.mode==='crop')updateCropBox()});
 
     function renderCrop(){
@@ -538,6 +572,7 @@
       dlBlob(S.xBlob,S.xFmt,S.xW||S.ow,S.xH||S.oh);
     });
     sel('#compress-copy-btn').addEventListener('click',function(){cpBlob(S.xBlob,'#compress-copy-btn')});
+    sel('#compress-share-btn').addEventListener('click',function(){shareBlob(S.xBlob,S.xFmt,S.xW||S.ow,S.xH||S.oh)});
 
     async function runCompress(){
       if(!S.img||!S.xTarget)return;
@@ -617,17 +652,53 @@
       document.body.appendChild(a);a.click();document.body.removeChild(a);
       URL.revokeObjectURL(url);showToast('Image downloaded');
     }
-    async function cpBlob(blob,btnSel){
+
+    // FIX: Safari-compatible clipboard copy
+    // Safari requires ClipboardItem to be created synchronously in the click handler
+    // with a Promise for the blob data (not an already-resolved blob)
+    function cpBlob(blob,btnSel){
       if(!blob){showToast('Nothing to copy');return}
       try{
-        var b=blob;
-        if(blob.type!=='image/png')b=await new Promise(function(r){canvas.toBlob(r,'image/png')});
-        await navigator.clipboard.write([new ClipboardItem({'image/png':b})]);
-        var btn=sel(btnSel);btn.classList.add('copied');btn.innerHTML='<span>\u2713</span> Copied!';
-        showToast('Copied to clipboard');
-        setTimeout(function(){btn.classList.remove('copied');btn.innerHTML='<span>&#128203;</span> Copy to Clipboard'},2000);
-      }catch(e){showToast('Copy not supported in this browser')}
+        // Create ClipboardItem with a Promise — this keeps the user gesture alive in Safari
+        var pngPromise=new Promise(function(resolve,reject){
+          if(blob.type==='image/png'){resolve(blob);return}
+          // Need to re-render current canvas content as PNG
+          canvas.toBlob(function(pngBlob){
+            if(pngBlob)resolve(pngBlob);else reject(new Error('PNG conversion failed'));
+          },'image/png');
+        });
+        // Write must be called synchronously in the click handler
+        navigator.clipboard.write([new ClipboardItem({'image/png':pngPromise})]).then(function(){
+          var btn=sel(btnSel);btn.classList.add('copied');btn.innerHTML='<span>\u2713</span> Copied!';
+          showToast('Copied to clipboard');
+          setTimeout(function(){btn.classList.remove('copied');btn.innerHTML='<span>&#128203;</span> Copy to Clipboard'},2000);
+        }).catch(function(){
+          showToast('Copy failed \u2014 try the Share button on mobile');
+        });
+      }catch(e){
+        showToast('Copy not supported in this browser');
+      }
     }
+
+    // Share / Save to Photos via Web Share API
+    function shareBlob(blob,fmtId,w,h){
+      if(!blob){showToast('Nothing to share');return}
+      var ext=fmtId==='jpeg'?'jpg':fmtId;
+      var mime=fmtId==='jpeg'?'image/jpeg':fmtId==='png'?'image/png':'image/webp';
+      var base=S.file.name.replace(/\.[^/.]+$/,'');
+      var filename=base+'_'+w+'x'+h+'.'+ext;
+      var file=new File([blob],filename,{type:mime});
+      if(navigator.canShare&&navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:'Resized Image'}).then(function(){
+          showToast('Shared successfully');
+        }).catch(function(err){
+          if(err.name!=='AbortError')showToast('Share cancelled');
+        });
+      }else{
+        showToast('Sharing not supported \u2014 use Download instead');
+      }
+    }
+
     function fmtSize(b){if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(2)+' MB'}
     function truncName(n,m){if(n.length<=m)return n;var e=n.split('.').pop();return n.substring(0,m-e.length-4)+'\u2026.'+e}
     function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v))}
