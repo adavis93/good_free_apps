@@ -106,7 +106,7 @@ def process_request(
     logger.info(
         "Processing upload",
         extra={
-            "filename": safe_filename,
+            "upload_filename": safe_filename,
             "mime": validation.canonical_mime,
             "size_bytes": len(content),
         }
