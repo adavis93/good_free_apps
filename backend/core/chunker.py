@@ -425,19 +425,49 @@ def _split_by_sections(
         if section:
             raw_sections.append(section)
 
-    # Enforce max section size by force-splitting oversized sections
+    # Enforce max section size by force-splitting oversized sections.
+    # When we do split, we scan each sub-chunk for the first sub-heading
+    # (Roman numeral or letter-section pattern) and use it to label that
+    # chunk — so "STATEMENT OF THE CASE" splits become
+    # "I. Factual Background", "II. School Disciplinary Proceedings", etc.
     if max_section_size > 0:
         final_sections: list[str] = []
         for section in raw_sections:
             if len(section) <= max_section_size:
                 final_sections.append(section)
             else:
-                # Split the oversized section by characters
                 sub_chunks = _split_by_characters(section, max_section_size, overlap=0)
                 final_sections.extend(sub_chunks)
         return final_sections
 
     return raw_sections
+
+
+def _find_first_subheading(text: str) -> Optional[str]:
+    """
+    Scan the first 25 lines of a chunk for a Roman-numeral or letter sub-heading.
+
+    Used to give force-split chunks a more specific label than their parent
+    section heading. Applies the same exclusions as the parser so that TOC
+    dot-leader lines are not mistaken for sub-headings.
+
+    Returns the cleaned sub-heading text, or None if none found.
+    """
+    import re
+    from .parser import _is_never_heading, _clean_heading_label
+
+    for line in text.split("\n")[:25]:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        # Skip dot-leader lines and other universal non-headings
+        if _is_never_heading(stripped):
+            continue
+        if re.match(r"^[IVXLCDM]{1,6}\.\s+[A-Z]", stripped):
+            return _clean_heading_label(stripped)
+        if re.match(r"^[A-Z]\.\s+[A-Z]", stripped):
+            return _clean_heading_label(stripped)
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -538,8 +568,26 @@ def _build_chunk_objects(
         char_start = offset
         char_end = offset + len(text)
 
-        # Find the heading this chunk falls under
+        # Find the heading this chunk falls under.
+        # If the parser gave a broad section heading (e.g. "STATEMENT OF THE
+        # CASE") but the chunk itself opens with a sub-heading (e.g.
+        # "I. Factual Background"), prefer the more specific label.
+        #
+        # Important guard: only apply the sub-heading finder when this chunk
+        # is a CONTINUATION (force-split) chunk, i.e. the chunk text does NOT
+        # start with the detected heading label. If the chunk starts with its
+        # own heading (e.g. "TABLE OF CONTENTS\n..."), the heading_label is
+        # already correct and we must not override it with a sub-heading found
+        # inside the chunk body (which could be a TOC entry).
         heading_label = _find_heading_for_offset(char_start, heading_ranges)
+        chunk_opens_with_heading = (
+            heading_label is not None
+            and text.lstrip().startswith(heading_label)
+        )
+        if not chunk_opens_with_heading:
+            subheading = _find_first_subheading(text)
+            if subheading:
+                heading_label = subheading
 
         # Token count
         if use_tiktoken and enc:
