@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Chunker – Good Free Apps</title>
+  <meta name="description" content="Split documents into AI-ready chunks. Supports PDF, DOCX, TXT, HTML. Character, word, token, sentence, section, and delimiter modes.">
+
+  <!-- Shared Design System -->
+  <link rel="stylesheet" href="../../shared/design-tokens.css">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =============================================
+       DESIGN TOKENS (inline fallback — used when
+       design-tokens.css is not available, e.g. when
+       opening the file directly from disk)
+       ============================================= */
+    :root {
+      --color-primary: #1a1a1a;
+      --color-primary-hover: #2d2d2d;
+      --color-accent: #2563eb;
+      --color-accent-hover: #1d4ed8;
+      --color-accent-subtle: rgba(37, 99, 235, 0.08);
+      --color-background: #ffffff;
+      --color-surface: #fafafa;
+      --color-surface-elevated: #f5f5f5;
+      --color-border: #e5e5e5;
+      --color-border-strong: #d4d4d4;
+      --color-text-primary: #0a0a0a;
+      --color-text-secondary: #737373;
+      --color-text-tertiary: #a3a3a3;
+      --color-success: #16a34a;
+      --color-warning: #ea580c;
+      --color-error: #dc2626;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(37,99,235,0.08);
+      --shadow-lg: 0 8px 24px rgba(37,99,235,0.12);
+      --font-primary: 'Outfit', system-ui, sans-serif;
+      --font-mono: 'IBM Plex Mono', monospace;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+      --transition-fast: 150ms ease;
+      --transition-normal: 200ms ease;
+      --transition-spring: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --color-primary: #fafafa;
+      --color-primary-hover: #e5e5e5;
+      --color-accent: #3b82f6;
+      --color-accent-hover: #2563eb;
+      --color-accent-subtle: rgba(59, 130, 246, 0.1);
+      --color-background: #0a0a0a;
+      --color-surface: #171717;
+      --color-surface-elevated: #262626;
+      --color-border: #262626;
+      --color-border-strong: #404040;
+      --color-text-primary: #fafafa;
+      --color-text-secondary: #a3a3a3;
+      --color-text-tertiary: #737373;
+      --color-success: #22c55e;
+      --color-warning: #f97316;
+      --color-error: #ef4444;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(59,130,246,0.15);
+      --shadow-lg: 0 8px 24px rgba(59,130,246,0.2);
+    }
+
+    /* =============================================
+       RESET & BASE
+       ============================================= */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-primary);
+      background: var(--color-background);
+      color: var(--color-text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 300ms ease, color 300ms ease;
+      min-height: 100vh;
+    }
+
+    /* =============================================
+       HEADER — shared app header style
+       ============================================= */
+    .app-header {
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-background);
+      position: sticky;
+      top: 1rem;
+      margin: 1rem 2rem 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      background: var(--color-accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-size: 1.1rem;
+      color: var(--color-text-secondary);
+    }
+
+    .icon-btn:hover {
+      border-color: var(--color-accent);
+      background: var(--color-surface-elevated);
+      color: var(--color-accent);
+      transform: translateY(-1px);
+    }
+
+    /* =============================================
+       LAYOUT — two-panel split
+       ============================================= */
+    main {
+      padding: 1.5rem 2rem 4rem;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    /* =============================================
+       PANELS
+       ============================================= */
+    .panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--color-surface-elevated);
+    }
+
+    .panel-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .panel-meta {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* =============================================
+       INPUT PANEL
+       ============================================= */
+    .input-panel-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Upload zone */
+    .upload-zone {
+      border: 2px dashed var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      position: relative;
+      background: var(--color-background);
+    }
+
+    .upload-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    .upload-zone.has-file {
+      border-style: solid;
+      border-color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    .upload-icon {
+      font-size: 1.75rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .upload-text {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+      line-height: 1.4;
+    }
+
+    .upload-text strong {
+      color: var(--color-text-primary);
+    }
+
+    .upload-text .file-types {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--color-text-tertiary);
+      margin-top: 0.2rem;
+      font-family: var(--font-mono);
+    }
+
+    .upload-filename {
+      font-size: 0.8125rem;
+      font-family: var(--font-mono);
+      color: var(--color-accent);
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .upload-clear {
+      margin-left: auto;
+      flex-shrink: 0;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      z-index: 2;
+    }
+
+    .upload-clear:hover {
+      border-color: var(--color-error);
+      color: var(--color-error);
+    }
+
+    /* Loading state */
+    .upload-loading {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      font-size: 0.875rem;
+      color: var(--color-accent);
+    }
+
+    .upload-loading.visible { display: flex; }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--color-accent-subtle);
+      border-top-color: var(--color-accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Divider */
+    .input-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--color-text-tertiary);
+      font-size: 0.75rem;
+    }
+
+    .input-divider::before,
+    .input-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    /* Textarea */
+    .textarea-input {
+      width: 100%;
+      min-height: 140px;
+      max-height: 300px;
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-background);
+      color: var(--color-text-primary);
+      font-family: var(--font-primary);
+      font-size: 0.875rem;
+      border-radius: var(--radius-md);
+      resize: vertical;
+      transition: all var(--transition-normal);
+      line-height: 1.5;
+    }
+
+    .textarea-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-subtle);
+    }
+
+    .textarea-input::placeholder { color: var(--color-text-tertiary); }
+
+    .textarea-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: -0.25rem;
+    }
+
+    .char-count {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-tertiary);
+    }
+
+    /* Error message */
+    .error-msg {
+      display: none;
+      padding: 0.75rem 1rem;
+      background: rgba(220, 38, 38, 0.06);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+      color: var(--color-error);
+      line-height: 1.4;
+    }
+
+    .error-msg.visible { display: block; }
+
+    /* Warnings */
+    .warnings-box {
+      display: none;
+      padding: 0.75rem 1rem;
+      background: rgba(234, 88, 12, 0.06);
+      border: 1px solid rgba(234, 88, 12, 0.2);
+      border-radius: var(--radius-md);
+      font-size: 0.8125rem;
+      color: var(--color-warning);
+      line-height: 1.4;
+    }
+
+    .warnings-box.visible { display: block; }
+    .warnings-box p + p { margin-top: 0.25rem; }
+
+    /* =============================================
+       SETTINGS
+       ============================================= */
+    .settings-section {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .settings-title {
+      padding: 0.625rem 0.875rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--color-surface-elevated);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .settings-body {
+      padding: 0.875rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .settings-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .setting-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    .setting-field.full { grid-column: 1 / -1; }
+
+    .setting-label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+
+    .setting-hint {
+      font-size: 0.72rem;
+      color: var(--color-text-tertiary);
+      font-weight: 400;
+    }
+
+    .select,
+    .number-input,
+    .text-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-background);
+      color: var(--color-text-primary);
+      font-family: var(--font-primary);
+      font-size: 0.875rem;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-normal);
+      appearance: none;
+    }
+
+    .select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23737373' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2rem;
+      cursor: pointer;
+    }
+
+    .select:focus,
+    .number-input:focus,
+    .text-input:focus {
+      outline: none;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-subtle);
+    }
+
+    /* Toggle row */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .toggle-label {
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+      cursor: pointer;
+    }
+
+    .toggle-hint {
+      font-size: 0.72rem;
+      color: var(--color-text-tertiary);
+      display: block;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-flex;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .toggle-switch input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      width: 36px;
+      height: 20px;
+      background: var(--color-border-strong);
+      border-radius: var(--radius-full);
+      transition: background var(--transition-normal);
+      position: relative;
+    }
+
+    .toggle-slider::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: transform var(--transition-normal);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--color-accent);
+    }
+
+    .toggle-switch input:checked + .toggle-slider::after {
+      transform: translateX(16px);
+    }
+
+    /* Conditional settings panels */
+    .cond-field {
+      display: none;
+      flex-direction: column;
+      gap: 0.875rem;
+    }
+
+    .cond-field.visible { display: flex; }
+
+    /* =============================================
+       ACTION BAR
+       ============================================= */
+    .action-bar {
+      display: flex;
+      gap: 0.625rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      font-family: var(--font-primary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--color-primary);
+      color: var(--color-background);
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary:not(:disabled):hover {
+      background: var(--color-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--color-text-secondary);
+      border-color: var(--color-border);
+    }
+
+    .btn-secondary:not(:disabled):hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--color-text-tertiary);
+      border-color: transparent;
+      padding: 0.625rem 0.75rem;
+    }
+
+    .btn-ghost:hover {
+      color: var(--color-text-primary);
+      background: var(--color-surface-elevated);
+    }
+
+    /* =============================================
+       OUTPUT PANEL
+       ============================================= */
+    .output-panel {
+      display: none;
+      flex-direction: column;
+    }
+
+    .output-panel.visible { display: flex; }
+
+    /* Stats bar */
+    .stats-bar {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 0.875rem 1.25rem;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface-elevated);
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 0.1rem;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 32px;
+      background: var(--color-border);
+    }
+
+    /* Chunk list */
+    .chunks-list {
+      flex: 1;
+      overflow-y: auto;
+      max-height: calc(100vh - 320px);
+      min-height: 200px;
+    }
+
+    .chunk-item {
+      border-bottom: 1px solid var(--color-border);
+      animation: slideUp 0.3s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(8px); opacity: 0; }
+      to   { transform: translateY(0);   opacity: 1; }
+    }
+
+    .chunk-item:last-child { border-bottom: none; }
+
+    .chunk-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.875rem 1.25rem;
+      cursor: pointer;
+      transition: background var(--transition-fast);
+      user-select: none;
+    }
+
+    .chunk-header:hover { background: var(--color-surface-elevated); }
+
+    .chunk-header-left {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      min-width: 0;
+    }
+
+    .chunk-number {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .chunk-preview {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .chunk-header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .chunk-size {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+
+    .chunk-heading-badge {
+      padding: 0.15rem 0.5rem;
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      border-radius: var(--radius-full);
+      font-size: 0.68rem;
+      font-weight: 600;
+      white-space: nowrap;
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .copy-btn {
+      padding: 0.25rem 0.625rem;
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-primary);
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    .copy-btn.copied {
+      border-color: var(--color-success);
+      color: var(--color-success);
+      background: rgba(22, 163, 74, 0.06);
+    }
+
+    .chevron {
+      font-size: 0.8rem;
+      color: var(--color-text-tertiary);
+      transition: transform var(--transition-fast);
+      flex-shrink: 0;
+    }
+
+    .chunk-item.expanded .chevron { transform: rotate(180deg); }
+
+    .chunk-body {
+      display: none;
+      padding: 0 1.25rem 1.25rem;
+    }
+
+    .chunk-item.expanded .chunk-body { display: block; }
+
+    .chunk-text {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.65;
+      color: var(--color-text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--color-background);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.875rem 1rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    /* Download bar */
+    .download-bar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface-elevated);
+      flex-wrap: wrap;
+    }
+
+    /* Empty / placeholder state */
+    .output-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3.5rem 2rem;
+      text-align: center;
+      gap: 0.75rem;
+      color: var(--color-text-tertiary);
+      min-height: 320px;
+    }
+
+    .placeholder-icon {
+      font-size: 2.5rem;
+      line-height: 1;
+      opacity: 0.5;
+    }
+
+    .placeholder-text {
+      font-size: 0.875rem;
+      line-height: 1.5;
+      max-width: 280px;
+    }
+
+    /* =============================================
+       RESPONSIVE
+       ============================================= */
+    @media (max-width: 900px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .chunks-list {
+        max-height: 60vh;
+      }
+
+      .app-header {
+        margin: 0.75rem 1rem 0;
+        padding: 0.875rem 1.25rem;
+      }
+
+      main {
+        padding: 1rem 1rem 3rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .settings-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       HEADER
+       ============================================= -->
+  <header class="app-header">
+    <a href="../../index.html" class="logo" title="Back to Good Free Apps">
+      <div class="logo-mark">G</div>
+      <span>Good Free Apps</span>
+    </a>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="window.location.href='../../index.html'" title="All apps" aria-label="Back to all apps">←</button>
+      <button class="icon-btn" onclick="toggleTheme()" aria-label="Toggle theme">◑</button>
+    </div>
+  </header>
+
+  <!-- =============================================
+       MAIN WORKSPACE
+       ============================================= -->
+  <main>
+    <div class="workspace">
+
+      <!-- ===== INPUT PANEL ===== -->
+      <div class="panel">
+
+        <div class="panel-header">
+          <span class="panel-title">Text Chunker</span>
+          <span class="panel-meta" id="input-char-count">0 chars</span>
+        </div>
+
+        <div class="input-panel-body">
+
+          <!-- Upload zone -->
+          <div class="upload-zone" id="upload-zone">
+            <input
+              type="file"
+              id="file-input"
+              accept=".pdf,.docx,.doc,.txt,.md,.markdown,.html,.htm,.csv"
+              onchange="handleFileSelect(event)"
+              onclick="event.stopPropagation()"
+            >
+            <div class="upload-icon" id="upload-icon">📄</div>
+            <div class="upload-text" id="upload-text-default">
+              <strong>Upload a file</strong> or drag & drop
+              <span class="file-types">PDF · DOCX · TXT · HTML · MD</span>
+            </div>
+            <div class="upload-text" id="upload-text-file" style="display:none; flex:1;">
+              <span class="upload-filename" id="upload-filename"></span>
+            </div>
+            <button class="upload-clear" id="upload-clear" style="display:none;" onclick="clearFile(event)">✕</button>
+          </div>
+
+          <!-- Loading indicator -->
+          <div class="upload-loading" id="upload-loading">
+            <div class="spinner"></div>
+            <span id="loading-msg">Processing…</span>
+          </div>
+
+          <!-- Or divider -->
+          <div class="input-divider">or paste text below</div>
+
+          <!-- Textarea -->
+          <textarea
+            class="textarea-input"
+            id="text-input"
+            placeholder="Paste your document text here — legal briefs, legislation, contracts, articles, anything long…"
+            oninput="handleTextInput()"
+          ></textarea>
+
+          <div class="textarea-meta">
+            <span class="char-count" id="char-count">0 chars · 0 words</span>
+          </div>
+
+          <!-- Error message -->
+          <div class="error-msg" id="error-msg"></div>
+
+          <!-- =============================================
+               SETTINGS
+               ============================================= -->
+          <div class="settings-section">
+            <div class="settings-title">Options</div>
+            <div class="settings-body">
+
+              <!-- Method + Size -->
+              <div class="settings-row">
+                <div class="setting-field">
+                  <label class="setting-label" for="chunk-method">
+                    Split method
+                  </label>
+                  <select class="select" id="chunk-method" onchange="handleMethodChange()">
+                    <option value="sections">Logical sections</option>
+                    <option value="characters">Character count</option>
+                    <option value="words">Word count</option>
+                    <option value="tokens">Token count</option>
+                    <option value="sentences">Sentence groups</option>
+                    <option value="delimiter">Custom delimiter</option>
+                  </select>
+                </div>
+
+                <!-- Size field — hidden for sections & delimiter modes -->
+                <div class="setting-field" id="size-field">
+                  <label class="setting-label" for="chunk-size">
+                    <span id="size-label">Size per chunk</span>
+                  </label>
+                  <input class="number-input" type="number" id="chunk-size" value="4000" min="1" max="500000" step="100">
+                </div>
+              </div>
+
+              <!-- Overlap toggle — hidden for sections & delimiter -->
+              <div class="cond-field visible" id="overlap-field">
+                <div class="toggle-row">
+                  <label class="toggle-label" for="overlap-toggle">
+                    Overlap between chunks
+                    <span class="toggle-hint">Repeat context at the start of each new chunk</span>
+                  </label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="overlap-toggle">
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Sections-specific settings -->
+              <div class="cond-field visible" id="sections-field">
+                <div class="settings-row">
+                  <div class="setting-field">
+                    <label class="setting-label" for="max-section-size">
+                      Max section size
+                      <span class="setting-hint">chars — splits oversized sections</span>
+                    </label>
+                    <input class="number-input" type="number" id="max-section-size" value="8000" min="200" max="500000" step="500">
+                  </div>
+                  <div class="setting-field">
+                    <label class="setting-label" for="min-chunk-size">
+                      Min chunk size
+                      <span class="setting-hint">chars — merges tiny fragments</span>
+                    </label>
+                    <input class="number-input" type="number" id="min-chunk-size" value="400" min="0" max="10000" step="50">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Delimiter field -->
+              <div class="cond-field" id="delimiter-field">
+                <div class="setting-field full">
+                  <label class="setting-label" for="delimiter-input">
+                    Delimiter string
+                    <span class="setting-hint">Use \n for newline, \n\n for blank line</span>
+                  </label>
+                  <input class="text-input" type="text" id="delimiter-input" value="\n\n" placeholder="\n\n">
+                </div>
+              </div>
+
+              <!-- Output format -->
+              <div class="settings-row">
+                <div class="setting-field">
+                  <label class="setting-label" for="output-format">
+                    Download format
+                  </label>
+                  <select class="select" id="output-format">
+                    <option value="json">JSON</option>
+                    <option value="text">Plain text</option>
+                    <option value="csv">CSV</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="action-bar">
+            <button class="btn btn-primary" id="chunk-btn" onclick="runChunker()" disabled>
+              Split into Chunks
+            </button>
+            <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== OUTPUT PANEL ===== -->
+
+      <!-- Placeholder — shown before first run -->
+      <div class="panel" id="output-placeholder">
+        <div class="panel-header">
+          <span class="panel-title">Chunks</span>
+          <span class="panel-meta">—</span>
+        </div>
+        <div class="output-placeholder">
+          <div class="placeholder-icon">✂️</div>
+          <p class="placeholder-text">Upload a file or paste text, choose your settings, then click <strong>Split into Chunks</strong>.</p>
+        </div>
+      </div>
+
+      <!-- Output — shown after a successful run -->
+      <div class="panel output-panel" id="output-panel">
+        <div class="panel-header">
+          <span class="panel-title">Chunks</span>
+          <span class="panel-meta" id="output-meta">—</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <div class="stat-value" id="stat-chunks">—</div>
+            <div class="stat-label">Chunks</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-avg-tokens">—</div>
+            <div class="stat-label">Avg tokens</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-total-words">—</div>
+            <div class="stat-label">Total words</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-value" id="stat-total-chars">—</div>
+            <div class="stat-label">Total chars</div>
+          </div>
+        </div>
+
+        <!-- Warnings (shown if backend returned any) -->
+        <div class="warnings-box" id="warnings-box" style="margin:0.875rem 1.25rem 0;"></div>
+
+        <!-- Chunk list -->
+        <div class="chunks-list" id="chunks-list"></div>
+
+        <!-- Download bar -->
+        <div class="download-bar">
+          <button class="btn btn-secondary" onclick="downloadChunks()" style="flex:1;">
+            ↓ Download
+          </button>
+          <button class="btn btn-secondary" onclick="copyAll()">⎘ Copy all</button>
+        </div>
+      </div>
+
+    </div><!-- /workspace -->
+  </main>
+
+  <script>
+    // =============================================
+    // CONFIGURATION
+    // =============================================
+    // Replace this with your Railway deployment URL.
+    // Example: 'https://good-free-apps-production.up.railway.app'
+    //
+    // During local development, leave it as an empty string to use
+    // the built-in client-side fallback for plain text input.
+    const BACKEND_URL = '';
+
+    // =============================================
+    // STATE
+    // =============================================
+    let currentChunks = [];     // Array of chunk objects from the backend response
+    let lastApiResponse = null; // Full response for download
+    let currentFile = null;     // The File object selected by the user
+    let inputText = '';         // Current textarea value
+
+    // =============================================
+    // THEME
+    // =============================================
+    function toggleTheme() {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+    }
+
+    // =============================================
+    // FILE HANDLING
+    // =============================================
+    const uploadZone = document.getElementById('upload-zone');
+
+    uploadZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      uploadZone.classList.add('drag-over');
+    });
+
+    uploadZone.addEventListener('dragleave', e => {
+      if (!uploadZone.contains(e.relatedTarget)) {
+        uploadZone.classList.remove('drag-over');
+      }
+    });
+
+    uploadZone.addEventListener('drop', e => {
+      e.preventDefault();
+      uploadZone.classList.remove('drag-over');
+      const file = e.dataTransfer.files[0];
+      if (file) setFile(file);
+    });
+
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (file) setFile(file);
+    }
+
+    function setFile(file) {
+      const MAX = 50 * 1024 * 1024; // 50 MB
+      if (file.size > MAX) {
+        showError('File is too large. Maximum size is 50 MB.');
+        return;
+      }
+
+      currentFile = file;
+
+      // Update upload zone UI
+      uploadZone.classList.add('has-file');
+      document.getElementById('upload-icon').textContent = getFileIcon(file.name);
+      document.getElementById('upload-text-default').style.display = 'none';
+      document.getElementById('upload-text-file').style.display = 'block';
+      document.getElementById('upload-filename').textContent = file.name;
+      document.getElementById('upload-clear').style.display = 'block';
+
+      // Clear textarea when a file is selected
+      document.getElementById('text-input').value = '';
+      inputText = '';
+      updateCharCount();
+      clearError();
+      updateChunkButton();
+    }
+
+    function clearFile(event) {
+      event.stopPropagation();
+      currentFile = null;
+      document.getElementById('file-input').value = '';
+      uploadZone.classList.remove('has-file');
+      document.getElementById('upload-icon').textContent = '📄';
+      document.getElementById('upload-text-default').style.display = 'block';
+      document.getElementById('upload-text-file').style.display = 'none';
+      document.getElementById('upload-clear').style.display = 'none';
+      updateChunkButton();
+    }
+
+    function getFileIcon(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      const icons = { pdf: '📋', docx: '📝', doc: '📝', html: '🌐', htm: '🌐', md: '🗒️', markdown: '🗒️' };
+      return icons[ext] || '📄';
+    }
+
+    // =============================================
+    // TEXT INPUT
+    // =============================================
+    function handleTextInput() {
+      inputText = document.getElementById('text-input').value;
+      updateCharCount();
+      clearError();
+
+      // If user types in textarea, clear any selected file
+      if (inputText && currentFile) {
+        clearFile({ stopPropagation: () => {} });
+      }
+
+      updateChunkButton();
+    }
+
+    function updateCharCount() {
+      const text = document.getElementById('text-input').value;
+      const chars = text.length;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      document.getElementById('input-char-count').textContent = formatNum(chars) + ' chars';
+      document.getElementById('char-count').textContent = `${formatNum(chars)} chars · ${formatNum(words)} words`;
+    }
+
+    function updateChunkButton() {
+      const hasInput = !!currentFile || document.getElementById('text-input').value.trim().length > 0;
+      document.getElementById('chunk-btn').disabled = !hasInput;
+    }
+
+    // =============================================
+    // METHOD CHANGE — show/hide conditional fields
+    // =============================================
+    function handleMethodChange() {
+      const method = document.getElementById('chunk-method').value;
+
+      const sizeField    = document.getElementById('size-field');
+      const overlapField = document.getElementById('overlap-field');
+      const sectionsField = document.getElementById('sections-field');
+      const delimField   = document.getElementById('delimiter-field');
+      const sizeLabel    = document.getElementById('size-label');
+      const sizeInput    = document.getElementById('chunk-size');
+
+      // Hide all conditional fields first
+      overlapField.classList.remove('visible');
+      sectionsField.classList.remove('visible');
+      delimField.classList.remove('visible');
+      sizeField.style.display = 'block';
+
+      switch (method) {
+        case 'characters':
+          sizeLabel.textContent = 'Characters per chunk';
+          sizeInput.value = 4000;
+          sizeInput.step = 100;
+          overlapField.classList.add('visible');
+          break;
+
+        case 'words':
+          sizeLabel.textContent = 'Words per chunk';
+          sizeInput.value = 600;
+          sizeInput.step = 50;
+          overlapField.classList.add('visible');
+          break;
+
+        case 'tokens':
+          sizeLabel.textContent = 'Tokens per chunk';
+          sizeInput.value = 1000;
+          sizeInput.step = 100;
+          overlapField.classList.add('visible');
+          break;
+
+        case 'sentences':
+          sizeLabel.textContent = 'Sentences per chunk';
+          sizeInput.value = 8;
+          sizeInput.min = 1;
+          sizeInput.step = 1;
+          // No overlap for sentence mode
+          break;
+
+        case 'sections':
+          sizeField.style.display = 'none';
+          sectionsField.classList.add('visible');
+          break;
+
+        case 'delimiter':
+          sizeField.style.display = 'none';
+          delimField.classList.add('visible');
+          break;
+      }
+    }
+
+    // =============================================
+    // BUILD OPTIONS OBJECT
+    // =============================================
+    function buildOptions() {
+      const method = document.getElementById('chunk-method').value;
+      const outputFormat = document.getElementById('output-format').value;
+      const useOverlap = document.getElementById('overlap-toggle').checked;
+      const size = parseInt(document.getElementById('chunk-size').value, 10) || 4000;
+
+      const opts = {
+        method,
+        output_format: outputFormat,
+      };
+
+      if (['characters', 'words', 'tokens', 'sentences'].includes(method)) {
+        opts.size = size;
+        if (useOverlap) {
+          // Overlap is ~5% of chunk size, minimum 1
+          opts.overlap = Math.max(1, Math.floor(size * 0.05));
+        }
+      }
+
+      if (method === 'sections') {
+        opts.max_section_size = parseInt(document.getElementById('max-section-size').value, 10) || 8000;
+        opts.min_chunk_size = parseInt(document.getElementById('min-chunk-size').value, 10) || 400;
+      }
+
+      if (method === 'delimiter') {
+        opts.delimiter = document.getElementById('delimiter-input').value || '\n\n';
+      }
+
+      return opts;
+    }
+
+    // =============================================
+    // MAIN RUNNER — sends to backend
+    // =============================================
+    async function runChunker() {
+      clearError();
+      hideWarnings();
+
+      const hasFile = !!currentFile;
+      const hasText = document.getElementById('text-input').value.trim().length > 0;
+
+      if (!hasFile && !hasText) {
+        showError('Please upload a file or paste some text first.');
+        return;
+      }
+
+      // Check backend is configured
+      if (!BACKEND_URL) {
+        showError(
+          'Backend is not configured. Open the file in a code editor and set the BACKEND_URL variable at the top of the <script> section to your deployed backend URL.'
+        );
+        return;
+      }
+
+      const opts = buildOptions();
+      setLoading(true, hasFile ? `Uploading ${currentFile.name}…` : 'Processing text…');
+
+      try {
+        const formData = new FormData();
+        formData.append('options', JSON.stringify(opts));
+
+        if (hasFile) {
+          formData.append('file', currentFile);
+        } else {
+          formData.append('text', document.getElementById('text-input').value);
+        }
+
+        const response = await fetch(`${BACKEND_URL}/api/chunk`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!data.ok) {
+          handleApiError(data);
+          return;
+        }
+
+        // Success — render results
+        lastApiResponse = data;
+        currentChunks = data.chunks;
+        renderOutput(data);
+
+        if (data.warnings && data.warnings.length > 0) {
+          showWarnings(data.warnings);
+        }
+
+      } catch (err) {
+        if (err.name === 'TypeError' && err.message.includes('fetch')) {
+          showError('Could not reach the backend. Make sure it is running and BACKEND_URL is correct.');
+        } else {
+          showError('An unexpected error occurred. Please try again.');
+          console.error('[Text Chunker]', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function handleApiError(data) {
+      const messages = {
+        VALIDATION_ERROR:    data.message,
+        PARSE_ERROR:         data.message,
+        NO_TEXT_EXTRACTED:   'No text could be extracted. If this is a scanned PDF, the text is stored as an image and requires OCR processing.',
+        SIZE_LIMIT_EXCEEDED: 'File too large. Maximum size is 50 MB.',
+        RATE_LIMITED:        'Too many requests. Please wait a moment and try again.',
+        NO_INPUT:            'No input received. Please upload a file or paste text.',
+        SERVER_ERROR:        'A server error occurred. Please try again in a moment.',
+      };
+      showError(messages[data.code] || data.message || 'Something went wrong. Please try again.');
+    }
+
+    // =============================================
+    // LOADING STATE
+    // =============================================
+    function setLoading(visible, message) {
+      const loadingEl = document.getElementById('upload-loading');
+      const chunkBtn  = document.getElementById('chunk-btn');
+      loadingEl.classList.toggle('visible', visible);
+      document.getElementById('loading-msg').textContent = message || 'Processing…';
+      chunkBtn.disabled = visible;
+      chunkBtn.textContent = visible ? 'Processing…' : 'Split into Chunks';
+    }
+
+    // =============================================
+    // RENDER OUTPUT
+    // =============================================
+    function renderOutput(data) {
+      const chunks = data.chunks;
+
+      // Show output panel, hide placeholder
+      document.getElementById('output-placeholder').style.display = 'none';
+      document.getElementById('output-panel').classList.add('visible');
+
+      // Stats
+      const totalTokens = chunks.reduce((s, c) => s + (c.token_count || 0), 0);
+      const avgTokens   = chunks.length ? Math.round(totalTokens / chunks.length) : 0;
+
+      document.getElementById('stat-chunks').textContent     = chunks.length;
+      document.getElementById('stat-avg-tokens').textContent = formatNum(avgTokens);
+      document.getElementById('stat-total-words').textContent = formatNum(data.total_words);
+      document.getElementById('stat-total-chars').textContent = formatNum(data.total_chars);
+      document.getElementById('output-meta').textContent =
+        `${chunks.length} chunk${chunks.length !== 1 ? 's' : ''} · ${data.method}`;
+
+      // Render chunk items
+      const list = document.getElementById('chunks-list');
+      list.innerHTML = chunks.map((chunk, i) => {
+        const preview = chunk.text.slice(0, 90).replace(/\n/g, ' ').trim();
+        const tokens  = chunk.token_count ? `~${chunk.token_count} tok` : '';
+        const words   = `${chunk.word_count} words`;
+        const sizeStr = tokens ? `${tokens} · ${words}` : words;
+
+        const headingBadge = chunk.heading
+          ? `<span class="chunk-heading-badge" title="${escapeHtml(chunk.heading)}">${escapeHtml(chunk.heading)}</span>`
+          : '';
+
+        return `
+          <div class="chunk-item" style="animation-delay:${Math.min(i * 0.035, 0.5)}s" id="chunk-${i}">
+            <div class="chunk-header" onclick="toggleChunk(${i})">
+              <div class="chunk-header-left">
+                <span class="chunk-number">#${chunk.index} of ${chunks.length}</span>
+                <span class="chunk-preview">${escapeHtml(preview)}${preview.length < chunk.text.length ? '…' : ''}</span>
+              </div>
+              <div class="chunk-header-right">
+                ${headingBadge}
+                <span class="chunk-size">${sizeStr}</span>
+                <button class="copy-btn" onclick="copyChunk(event, ${i})" id="copy-btn-${i}">Copy</button>
+                <span class="chevron">▾</span>
+              </div>
+            </div>
+            <div class="chunk-body">
+              <div class="chunk-text">${escapeHtml(chunk.text)}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function toggleChunk(index) {
+      document.getElementById('chunk-' + index).classList.toggle('expanded');
+    }
+
+    // =============================================
+    // COPY
+    // =============================================
+    function copyChunk(event, index) {
+      event.stopPropagation();
+      const text = currentChunks[index].text;
+      const btn  = document.getElementById('copy-btn-' + index);
+
+      writeToClipboard(text, () => {
+        btn.textContent = '✓ Copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1800);
+      });
+    }
+
+    function copyAll() {
+      const total = currentChunks.length;
+      const allText = currentChunks.map((c, i) =>
+        `=== CHUNK ${i + 1} OF ${total} ===\n\n${c.text}`
+      ).join('\n\n' + '─'.repeat(60) + '\n\n');
+
+      writeToClipboard(allText, () => {
+        // Brief visual feedback on the button
+        const btn = event.target;
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied all';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      });
+    }
+
+    function writeToClipboard(text, onSuccess) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess));
+      } else {
+        fallbackCopy(text, onSuccess);
+      }
+    }
+
+    function fallbackCopy(text, onSuccess) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;width:1px;height:1px;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try { document.execCommand('copy'); onSuccess(); } catch {}
+      document.body.removeChild(ta);
+    }
+
+    // =============================================
+    // DOWNLOAD
+    // =============================================
+    function downloadChunks() {
+      if (!lastApiResponse) return;
+
+      const format = document.getElementById('output-format').value;
+
+      // Re-request from the backend in the chosen download format.
+      // If the user changed the format dropdown after the last run,
+      // this triggers a fresh request with the new format.
+      downloadFromBackend(format);
+    }
+
+    async function downloadFromBackend(format) {
+      if (!BACKEND_URL || !currentChunks.length) return;
+
+      const opts = { ...buildOptions(), output_format: format };
+      setLoading(true, 'Preparing download…');
+
+      try {
+        const formData = new FormData();
+        formData.append('options', JSON.stringify(opts));
+
+        if (currentFile) {
+          formData.append('file', currentFile);
+        } else {
+          formData.append('text', document.getElementById('text-input').value);
+        }
+
+        const response = await fetch(`${BACKEND_URL}/api/chunk`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const contentType = response.headers.get('Content-Type') || '';
+        const blob = await response.blob();
+
+        const exts = { json: '.json', text: '.txt', csv: '.csv' };
+        const ext  = exts[format] || '.txt';
+        const filename = (currentFile ? currentFile.name.replace(/\.[^.]+$/, '') : 'chunks') + ext;
+
+        triggerDownload(blob, filename);
+      } catch (err) {
+        // Fallback: build the file client-side from cached chunks
+        downloadClientSide(format);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    function downloadClientSide(format) {
+      // Client-side download fallback using the cached response.
+      // Used when the backend re-request fails.
+      const chunks = currentChunks;
+      let content, type, ext;
+
+      if (format === 'json') {
+        content = JSON.stringify(lastApiResponse, null, 2);
+        type = 'application/json';
+        ext = '.json';
+      } else if (format === 'csv') {
+        const rows = [['index', 'heading', 'word_count', 'token_count', 'text']];
+        chunks.forEach(c => rows.push([
+          c.index,
+          c.heading || '',
+          c.word_count,
+          c.token_count || '',
+          c.text.replace(/\n/g, ' '),
+        ]));
+        content = rows.map(r => r.map(f => `"${String(f).replace(/"/g, '""')}"`).join(',')).join('\n');
+        type = 'text/csv';
+        ext = '.csv';
+      } else {
+        const total = chunks.length;
+        content = chunks.map(c =>
+          `=== CHUNK ${c.index} OF ${total} ===\n\n${c.text}`
+        ).join('\n\n' + '─'.repeat(60) + '\n\n');
+        type = 'text/plain';
+        ext = '.txt';
+      }
+
+      const filename = (currentFile ? currentFile.name.replace(/\.[^.]+$/, '') : 'chunks') + ext;
+      triggerDownload(new Blob([content], { type }), filename);
+    }
+
+    function triggerDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a   = document.createElement('a');
+      a.href     = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+    }
+
+    // =============================================
+    // ERRORS & WARNINGS
+    // =============================================
+    function showError(msg) {
+      const el = document.getElementById('error-msg');
+      el.textContent = msg;
+      el.classList.add('visible');
+    }
+
+    function clearError() {
+      document.getElementById('error-msg').classList.remove('visible');
+    }
+
+    function showWarnings(warnings) {
+      const box = document.getElementById('warnings-box');
+      box.innerHTML = warnings.map(w => `<p>⚠ ${escapeHtml(w)}</p>`).join('');
+      box.classList.add('visible');
+    }
+
+    function hideWarnings() {
+      const box = document.getElementById('warnings-box');
+      box.classList.remove('visible');
+      box.innerHTML = '';
+    }
+
+    // =============================================
+    // CLEAR ALL
+    // =============================================
+    function clearAll() {
+      // Input
+      document.getElementById('text-input').value = '';
+      inputText = '';
+      clearFile({ stopPropagation: () => {} });
+      updateCharCount();
+      updateChunkButton();
+      clearError();
+      hideWarnings();
+
+      // Output
+      currentChunks   = [];
+      lastApiResponse = null;
+      document.getElementById('output-panel').classList.remove('visible');
+      document.getElementById('output-placeholder').style.display = '';
+      document.getElementById('chunks-list').innerHTML = '';
+
+      // Reset loading state
+      setLoading(false);
+      document.getElementById('chunk-btn').disabled = true;
+    }
+
+    // =============================================
+    // UTILITIES
+    // =============================================
+    function formatNum(n) {
+      if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+      if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'K';
+      return n.toString();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // =============================================
+    // INIT
+    // =============================================
+    initTheme();
+    handleMethodChange(); // Set correct initial state for sections mode
+  </script>
+</body>
+</html>

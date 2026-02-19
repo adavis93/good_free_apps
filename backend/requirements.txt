@@ -1,0 +1,29 @@
+# ============================================================
+# Good Free Apps — Document Chunker Backend
+# Python 3.11+ required
+# ============================================================
+
+# ── Core server ─────────────────────────────────────────────
+flask>=3.0.0
+flask-cors>=4.0.0
+gunicorn>=22.0.0        # Production WSGI server (required for Railway/Render)
+
+# ── Document parsing ────────────────────────────────────────
+pdfplumber>=0.10.0      # PDF text extraction with character-level positioning
+python-docx>=1.1.0      # DOCX parsing with paragraph style metadata
+beautifulsoup4>=4.12.0  # HTML parsing
+lxml>=5.0.0             # Fast HTML/XML parser (BeautifulSoup backend)
+
+# ── Text processing ──────────────────────────────────────────
+chardet>=5.0.0          # Encoding detection for text files
+
+# ── Testing ──────────────────────────────────────────────────
+pytest>=8.0.0
+
+# ── Optional enhancements (uncomment to enable) ──────────────
+# tiktoken>=0.7.0        # Accurate token counting for the 'tokens' chunk mode
+#                        # Falls back to word-count approximation without it.
+#
+# spacy>=3.7.0           # Better sentence splitting for the 'sentences' mode.
+#                        # After installing: python -m spacy download en_core_web_sm
+#                        # Falls back to regex splitter without it.
