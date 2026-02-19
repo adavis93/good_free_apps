@@ -1149,7 +1149,27 @@
     //
     // During local development, leave it as an empty string to use
     // the built-in client-side fallback for plain text input.
-    const BACKEND_URL = '';
+    const BACKEND_URL = 'https://goodfreeapps-production.up.railway.app';
+
+// To chunk a file:
+async function sendToBackend(fileOrText, options) {
+    const formData = new FormData();
+    
+    if (fileOrText instanceof File) {
+        formData.append('file', fileOrText);
+    } else {
+        formData.append('text', fileOrText);
+    }
+    formData.append('options', JSON.stringify(options));
+    
+    const response = await fetch(`${BACKEND_URL}/api/chunk`, {
+        method: 'POST',
+        body: formData,
+        // No Content-Type header — let the browser set it with the boundary
+    });
+    
+    return response.json();
+}
 
     // =============================================
     // STATE
