@@ -1361,13 +1361,11 @@ async function sendToBackend(fileOrText, options) {
     // =============================================
     function buildOptions() {
       const method = document.getElementById('chunk-method').value;
-      const outputFormat = document.getElementById('output-format').value;
       const useOverlap = document.getElementById('overlap-toggle').checked;
       const size = parseInt(document.getElementById('chunk-size').value, 10) || 4000;
 
       const opts = {
         method,
-        output_format: outputFormat,
       };
 
       if (['characters', 'words', 'tokens', 'sentences'].includes(method)) {
