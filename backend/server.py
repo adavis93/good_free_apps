@@ -40,6 +40,7 @@ from flask_cors import CORS
 
 from core import process_request, process_text, ProcessingError
 from core.formatter import format_error
+from core.converter import convert_document, ConversionError, mime_to_format, ext_to_format
 
 # ---------------------------------------------------------------------------
 # Application setup
@@ -204,6 +205,123 @@ def _handle_file_upload(uploaded_file, options: dict) -> Response:
             code="SERVER_ERROR",
         )
         return Response(body, status=500, mimetype="application/json")
+
+
+@app.route("/api/convert", methods=["POST"])
+def convert_endpoint():
+    """
+    Document conversion endpoint.
+
+    Accepts multipart/form-data with:
+      file            The source document (required)
+      target_format   "txt", "docx", or "pdf" (required)
+
+    The source format is inferred from the file's extension and/or MIME type.
+
+    Returns:
+      On success: The converted file as binary bytes with appropriate
+                  Content-Type and Content-Disposition headers.
+      On error:   JSON body { ok: false, code: "...", message: "..." }
+
+    Supported conversions:
+      PDF  → TXT, DOCX
+      DOCX → TXT, PDF
+      TXT  → PDF, DOCX
+    """
+    # ── Rate limit ────────────────────────────────────────────────────────
+    client_ip = _get_client_ip()
+    if not _check_rate_limit(client_ip):
+        body = format_error(
+            "Too many requests. Please wait a moment and try again.",
+            code="RATE_LIMITED",
+        )
+        return Response(body, status=429, mimetype="application/json")
+
+    # ── Validate file present ─────────────────────────────────────────────
+    uploaded_file = request.files.get("file")
+    if not uploaded_file or not uploaded_file.filename:
+        body = format_error(
+            "No file provided. Send a file in the 'file' field.",
+            code="NO_INPUT",
+        )
+        return Response(body, status=400, mimetype="application/json")
+
+    # ── Validate target_format ────────────────────────────────────────────
+    target_format = request.form.get("target_format", "").strip().lower().lstrip(".")
+    if not target_format:
+        body = format_error(
+            "Missing 'target_format' field. Must be 'txt', 'docx', or 'pdf'.",
+            code="MISSING_TARGET_FORMAT",
+        )
+        return Response(body, status=400, mimetype="application/json")
+
+    # ── Infer source format ───────────────────────────────────────────────
+    filename = uploaded_file.filename
+    declared_mime = (uploaded_file.content_type or "").split(";")[0].strip()
+
+    source_format = ext_to_format(filename) or mime_to_format(declared_mime)
+    if source_format is None:
+        body = format_error(
+            f"Could not determine the source format from '{filename}'. "
+            "Supported formats: PDF, DOCX, TXT.",
+            code="UNKNOWN_FORMAT",
+        )
+        return Response(body, status=400, mimetype="application/json")
+
+    # ── Read file ─────────────────────────────────────────────────────────
+    try:
+        content = uploaded_file.read()
+    except Exception:
+        logger.error("Failed to read convert upload stream", exc_info=False)
+        body = format_error("Failed to read the uploaded file.", code="READ_ERROR")
+        return Response(body, status=400, mimetype="application/json")
+
+    if not content:
+        body = format_error("The uploaded file is empty.", code="EMPTY_FILE")
+        return Response(body, status=400, mimetype="application/json")
+
+    # ── Convert ───────────────────────────────────────────────────────────
+    try:
+        result_bytes, mime_type = convert_document(content, source_format, target_format)
+    except ConversionError as e:
+        body = format_error(e.message, code=e.code)
+        return Response(body, status=e.http_status, mimetype="application/json")
+    except Exception as e:
+        logger.error("Unexpected error during conversion", exc_info=True)
+        body = format_error(
+            "An unexpected error occurred during conversion. Please try again.",
+            code="SERVER_ERROR",
+        )
+        return Response(body, status=500, mimetype="application/json")
+
+    # ── Build download filename ───────────────────────────────────────────
+    stem = os.path.splitext(filename)[0]
+    ext_map = {"txt": ".txt", "docx": ".docx", "pdf": ".pdf"}
+    out_ext = ext_map.get(target_format, f".{target_format}")
+    download_name = f"{stem}{out_ext}"
+
+    # ── Return binary response ────────────────────────────────────────────
+    # Use 'inline' for PDF (browser can preview) and 'attachment' for others
+    disposition_type = "inline" if target_format == "pdf" else "attachment"
+    disposition = f'{disposition_type}; filename="{download_name}"'
+
+    return Response(
+        result_bytes,
+        status=200,
+        mimetype=mime_type.split(";")[0].strip(),
+        headers={"Content-Disposition": disposition},
+    )
+
+
+@app.route("/api/convert/capabilities", methods=["GET"])
+def convert_capabilities():
+    """Return the list of supported conversion pairs and whether LibreOffice is available."""
+    from core.converter import get_supported_conversions, _find_libreoffice
+    caps = {
+        "conversions": get_supported_conversions(),
+        "libreoffice_available": _find_libreoffice() is not None,
+    }
+    return jsonify(caps)
 
 
 def _handle_text_input(text: str, options: dict) -> Response:

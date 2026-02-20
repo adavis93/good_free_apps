@@ -1,5 +1,5 @@
 # ============================================================
-# Good Free Apps — Document Chunker Backend
+# Good Free Apps — Document Chunker + Converter Backend
 # Python 3.11+ required
 # ============================================================
 
@@ -14,11 +14,21 @@ python-docx>=1.1.0      # DOCX parsing with paragraph style metadata
 beautifulsoup4>=4.12.0  # HTML parsing
 lxml>=5.0.0             # Fast HTML/XML parser (BeautifulSoup backend)
 
+# ── Document conversion ──────────────────────────────────────
+pdf2docx>=0.5.8         # PDF→DOCX: reconstructs Word elements from PDF geometry
+                        # (best Python-native PDF→Word conversion available)
+reportlab>=4.2.0        # TXT→PDF: professional-grade PDF typesetting
+
 # ── Text processing ──────────────────────────────────────────
 chardet>=5.0.0          # Encoding detection for text files
 
 # ── Testing ──────────────────────────────────────────────────
 pytest>=8.0.0
+
+# ── Notes on system dependencies ─────────────────────────────
+# DOCX→PDF conversion requires LibreOffice on the host system.
+# This is installed as a system package, not via pip.
+# See nixpacks.toml (Railway) or DEPLOYMENT.md for instructions.
 
 # ── Optional enhancements (uncomment to enable) ──────────────
 # tiktoken>=0.7.0        # Accurate token counting for the 'tokens' chunk mode

@@ -1133,6 +1133,9 @@
           <button class="btn btn-secondary" onclick="downloadChunks()" style="flex:1;">
             ↓ Download
           </button>
+          <button class="btn btn-secondary" id="download-txt-btn" onclick="downloadFullTxt()" style="display:none;" title="Download the full extracted text as a single .txt file">
+            ↓ Full TXT
+          </button>
           <button class="btn btn-secondary" onclick="copyAll()">⎘ Copy all</button>
         </div>
       </div>
@@ -1492,6 +1495,16 @@ async function sendToBackend(fileOrText, options) {
       document.getElementById('output-placeholder').style.display = 'none';
       document.getElementById('output-panel').classList.add('visible');
 
+      // Show "Download Full TXT" button only when the source is a PDF or DOCX
+      // (text files don't benefit from a separate TXT extraction download)
+      const txtBtn = document.getElementById('download-txt-btn');
+      if (currentFile && BACKEND_URL) {
+        const ext = currentFile.name.split('.').pop().toLowerCase();
+        txtBtn.style.display = ['pdf', 'docx', 'doc'].includes(ext) ? '' : 'none';
+      } else {
+        txtBtn.style.display = 'none';
+      }
+
       // Stats
       const totalTokens = chunks.reduce((s, c) => s + (c.token_count || 0), 0);
       const avgTokens   = chunks.length ? Math.round(totalTokens / chunks.length) : 0;
@@ -1644,6 +1657,53 @@ async function sendToBackend(fileOrText, options) {
       }
     }
 
+    // =============================================
+    // DOWNLOAD FULL TXT
+    // Uses /api/convert to extract the full source
+    // text (before chunking) as a single .txt file.
+    // Only shown when source is a PDF or DOCX.
+    // =============================================
+    async function downloadFullTxt() {
+      if (!currentFile || !BACKEND_URL) return;
+
+      setLoading(true, 'Extracting full text…');
+
+      try {
+        const formData = new FormData();
+        formData.append('file', currentFile);
+        formData.append('target_format', 'txt');
+
+        const response = await fetch(`${BACKEND_URL}/api/convert`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          let msg = 'Text extraction failed.';
+          try {
+            const err = await response.json();
+            msg = err.message || msg;
+          } catch (_) {}
+          showError(msg);
+          return;
+        }
+
+        const blob = await response.blob();
+        const stem = currentFile.name.replace(/\.[^.]+$/, '');
+        triggerDownload(blob, stem + '.txt');
+
+      } catch (err) {
+        if (err.name === 'TypeError' && err.message.includes('fetch')) {
+          showError('Could not reach the backend. Make sure it is running and BACKEND_URL is correct.');
+        } else {
+          showError('An unexpected error occurred. Please try again.');
+          console.error('[Text Chunker] Full TXT download error:', err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
     function downloadClientSide(format) {
       // Client-side download fallback using the cached response.
       // Used when the backend re-request fails.
@@ -1734,6 +1794,7 @@ async function sendToBackend(fileOrText, options) {
       document.getElementById('output-panel').classList.remove('visible');
       document.getElementById('output-placeholder').style.display = '';
       document.getElementById('chunks-list').innerHTML = '';
+      document.getElementById('download-txt-btn').style.display = 'none';
 
       // Reset loading state
       setLoading(false);

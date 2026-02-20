@@ -1,0 +1,17 @@
+# nixpacks.toml — Railway build configuration
+#
+# This file instructs Railway's Nixpacks builder to install system packages
+# before running pip install and starting the server.
+#
+# LibreOffice is required for high-quality DOCX→PDF conversion.
+# It is large (~500MB installed) and adds ~3-5 minutes to the initial build,
+# but builds are cached — subsequent deploys from code changes are fast.
+#
+# If you want to deploy WITHOUT LibreOffice to reduce build time/size,
+# remove it from nixPkgs below. The /api/convert endpoint will still work
+# for all conversions except DOCX→PDF (which will return a clear error).
+
+[phases.setup]
+nixPkgs = [
+  "libreoffice",    # DOCX→PDF conversion (headless mode)
+]
