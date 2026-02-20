@@ -36,7 +36,7 @@ from collections import defaultdict
 from typing import Optional
 
 from flask import Flask, request, jsonify, Response
-from flask_cors import CORS
+
 
 from core import process_request, process_text, ProcessingError
 from core.formatter import format_error
@@ -54,16 +54,28 @@ logger = logging.getLogger("chunker.server")
 
 app = Flask(__name__)
 
-# CORS: allow browser uploads from any origin by default.
-# In production, restrict ALLOWED_ORIGINS to your frontend domain.
-allowed_origins = os.environ.get("ALLOWED_ORIGINS", "*")
-CORS(
-    app,
-    origins=allowed_origins.split(","),
-    methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"],
-    expose_headers=["Content-Disposition"],
-)
+# CORS: handle manually for reliability — flask-cors has edge cases with
+# multipart uploads and OPTIONS preflight requests.
+@app.after_request
+def add_cors_headers(response):
+    origin = request.headers.get("Origin", "*")
+    response.headers["Access-Control-Allow-Origin"] = origin
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+    response.headers["Access-Control-Expose-Headers"] = "Content-Disposition"
+    response.headers["Access-Control-Max-Age"] = "86400"
+    return response
+
+@app.before_request
+def handle_preflight():
+    if request.method == "OPTIONS":
+        response = Response(status=200)
+        origin = request.headers.get("Origin", "*")
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+        response.headers["Access-Control-Max-Age"] = "86400"
+        return response
 
 # ---------------------------------------------------------------------------
 # In-memory rate limiter
