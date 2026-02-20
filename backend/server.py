@@ -57,7 +57,13 @@ app = Flask(__name__)
 # CORS: allow browser uploads from any origin by default.
 # In production, restrict ALLOWED_ORIGINS to your frontend domain.
 allowed_origins = os.environ.get("ALLOWED_ORIGINS", "*")
-CORS(app, origins=allowed_origins.split(","))
+CORS(
+    app,
+    origins=allowed_origins.split(","),
+    methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
+    expose_headers=["Content-Disposition"],
+)
 
 # ---------------------------------------------------------------------------
 # In-memory rate limiter
@@ -207,7 +213,7 @@ def _handle_file_upload(uploaded_file, options: dict) -> Response:
         return Response(body, status=500, mimetype="application/json")
 
 
-@app.route("/api/convert", methods=["POST"])
+@app.route("/api/convert", methods=["POST", "OPTIONS"])
 def convert_endpoint():
     """
     Document conversion endpoint.
@@ -228,6 +234,10 @@ def convert_endpoint():
       DOCX → TXT, PDF
       TXT  → PDF, DOCX
     """
+    # Handle CORS preflight
+    if request.method == "OPTIONS":
+        return Response(status=200)
+
     # ── Rate limit ────────────────────────────────────────────────────────
     client_ip = _get_client_ip()
     if not _check_rate_limit(client_ip):
