@@ -321,7 +321,15 @@ def convert_endpoint():
     stem = os.path.splitext(filename)[0]
     ext_map = {"txt": ".txt", "docx": ".docx", "pdf": ".pdf"}
     out_ext = ext_map.get(target_format, f".{target_format}")
-    download_name = f"{stem}{out_ext}"
+
+    # Sanitize filename: HTTP headers must be ASCII with no control characters.
+    # Replace em dashes, smart quotes, and other non-ASCII with plain equivalents,
+    # then strip anything remaining that's not printable ASCII (32–126) except
+    # double-quotes and backslashes which would break the header value.
+    safe_stem = stem.encode("ascii", errors="replace").decode("ascii")
+    safe_stem = "".join(c for c in safe_stem if 32 <= ord(c) <= 126 and c not in '"\\')
+    safe_stem = safe_stem.strip() or "converted"
+    download_name = f"{safe_stem}{out_ext}"
 
     # ── Return binary response ────────────────────────────────────────────
     # Use 'inline' for PDF (browser can preview) and 'attachment' for others
