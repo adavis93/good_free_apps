@@ -245,7 +245,7 @@ def _pdf_to_docx(content: bytes) -> bytes:
             "The pdf2docx library is not installed. "
             "Run: pip install pdf2docx",
             code="DEPENDENCY_MISSING",
-            http_status=500,
+            http_status=503,
         )
 
     tmp_pdf_path: str | None = None
@@ -339,7 +339,7 @@ def _docx_to_pdf(content: bytes) -> bytes:
             "DOCX to PDF conversion requires LibreOffice. "
             "See DEPLOYMENT.md for installation instructions.",
             code="DEPENDENCY_MISSING",
-            http_status=500,
+            http_status=503,
         )
 
     tmp_docx_path: str | None = None
@@ -469,7 +469,7 @@ def _txt_to_pdf(content: bytes) -> bytes:
             "The reportlab library is not installed. "
             "Run: pip install reportlab",
             code="DEPENDENCY_MISSING",
-            http_status=500,
+            http_status=503,
         )
 
     # Decode — try UTF-8, fall back to latin-1
@@ -552,7 +552,7 @@ def _txt_to_docx(content: bytes) -> bytes:
         raise ConversionError(
             "python-docx is not installed. Run: pip install python-docx",
             code="DEPENDENCY_MISSING",
-            http_status=500,
+            http_status=503,
         )
 
     # Decode

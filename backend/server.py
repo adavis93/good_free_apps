@@ -285,6 +285,7 @@ def convert_endpoint():
         result_bytes, mime_type = convert_document(content, source_format, target_format)
     except ConversionError as e:
         body = format_error(e.message, code=e.code)
+        # Use the error's own http_status (422 for user errors, 503 for missing deps, etc.)
         return Response(body, status=e.http_status, mimetype="application/json")
     except Exception as e:
         logger.error("Unexpected error during conversion", exc_info=True)

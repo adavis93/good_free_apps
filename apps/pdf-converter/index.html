@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document Converter – Good Free Apps</title>
-  <meta name="description" content="Convert PDF to Word, Word to PDF, and more. Free, private, and high-quality — no account required.">
+  <title>PDF Converter – Good Free Apps</title>
+  <meta name="description" content="Convert PDF to Word or text. Convert Word or text to PDF. Free, no account required.">
 
   <!-- Shared Design System -->
   <link rel="stylesheet" href="../../shared/design-tokens.css">
@@ -16,7 +16,7 @@
 
   <style>
     /* =========================================
-       LAYOUT FOUNDATION
+       HEADER
        ========================================= */
     .app-header {
       padding: 1.25rem 2rem;
@@ -70,77 +70,50 @@
       gap: 0.75rem;
     }
 
+    /* =========================================
+       LAYOUT
+       ========================================= */
     main {
-      max-width: 860px;
+      max-width: 680px;
       margin: 0 auto;
       padding: 3rem 2rem 5rem;
     }
 
-    /* =========================================
-       HERO
-       ========================================= */
-    .hero {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .hero-eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.875rem;
-      background: var(--color-accent-subtle);
-      border: 1px solid rgba(37, 99, 235, 0.2);
-      border-radius: var(--radius-full);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-accent);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 1.25rem;
-    }
-
-    .hero-title {
-      font-size: clamp(2rem, 5vw, 3rem);
+    .page-title {
+      font-size: var(--font-size-2xl);
       font-weight: var(--font-weight-bold);
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      color: var(--color-text-primary);
-      margin-bottom: 0.875rem;
+      letter-spacing: -0.025em;
+      margin-bottom: 0.375rem;
     }
 
-    .hero-subtitle {
-      font-size: var(--font-size-md);
+    .page-subtitle {
+      font-size: var(--font-size-sm);
       color: var(--color-text-secondary);
-      max-width: 520px;
-      margin: 0 auto;
-      line-height: 1.65;
+      margin-bottom: 2rem;
     }
 
     /* =========================================
-       MAIN CONVERTER CARD
+       CONVERTER CARD
        ========================================= */
     .converter-card {
       background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-xl);
       overflow: hidden;
-      box-shadow: var(--shadow-sm);
     }
 
     /* ── Upload zone ── */
     .upload-zone {
-      padding: 3rem 2rem;
+      padding: 2.75rem 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.25rem;
+      gap: 1rem;
       cursor: pointer;
-      border-bottom: 1px solid var(--color-border);
       transition: background var(--transition-normal);
       position: relative;
-      min-height: 260px;
+      min-height: 220px;
     }
 
     .upload-zone:hover,
@@ -149,64 +122,8 @@
     }
 
     .upload-zone.drag-over {
-      border-color: var(--color-accent);
-      box-shadow: inset 0 0 0 2px var(--color-accent-subtle);
-    }
-
-    .upload-icon {
-      width: 64px;
-      height: 64px;
-      background: var(--color-surface-elevated);
-      border: 1.5px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.75rem;
-      transition: all var(--transition-normal);
-    }
-
-    .upload-zone:hover .upload-icon,
-    .upload-zone.drag-over .upload-icon {
-      background: var(--color-accent-subtle);
-      border-color: var(--color-accent);
-      transform: translateY(-3px);
-    }
-
-    .upload-text {
-      text-align: center;
-    }
-
-    .upload-text strong {
-      font-size: var(--font-size-base);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    .upload-text span {
-      font-size: var(--font-size-sm);
-      color: var(--color-text-secondary);
-    }
-
-    .format-pills {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .format-pill {
-      padding: 0.3rem 0.75rem;
-      background: var(--color-background);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-full);
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      font-family: var(--font-mono);
-      color: var(--color-text-secondary);
-      letter-spacing: 0.02em;
+      outline: 2px dashed var(--color-accent);
+      outline-offset: -2px;
     }
 
     #file-input {
@@ -218,175 +135,202 @@
       height: 100%;
     }
 
-    /* ── File selected state ── */
-    .file-selected-bar {
-      display: none;
-      padding: 1rem 1.5rem;
-      background: var(--color-background);
-      border-bottom: 1px solid var(--color-border);
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .file-selected-bar.visible {
-      display: flex;
-    }
-
-    .file-icon-badge {
-      width: 40px;
-      height: 40px;
+    .upload-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--color-surface-elevated);
+      border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
+      font-size: 1.5rem;
+      transition: all var(--transition-normal);
+    }
+
+    .upload-zone:hover .upload-icon,
+    .upload-zone.drag-over .upload-icon {
+      background: var(--color-accent-subtle);
+      border-color: var(--color-accent);
+    }
+
+    .upload-label {
+      text-align: center;
+    }
+
+    .upload-label strong {
+      display: block;
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      margin-bottom: 0.25rem;
+      color: var(--color-text-primary);
+    }
+
+    .upload-label span {
+      font-size: var(--font-size-sm);
+      color: var(--color-text-secondary);
+    }
+
+    .upload-formats {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .upload-format {
+      padding: 0.25rem 0.625rem;
+      background: var(--color-background);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-full);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      font-family: var(--font-mono);
+      color: var(--color-text-tertiary);
+    }
+
+    /* ── Divider ── */
+    .card-divider {
+      height: 1px;
+      background: var(--color-border);
+    }
+
+    /* ── File bar ── */
+    .file-bar {
+      display: none;
+      padding: 1rem 1.25rem;
+      align-items: center;
+      gap: 0.875rem;
+    }
+
+    .file-bar.visible { display: flex; }
+
+    .file-type-badge {
+      min-width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
       font-weight: var(--font-weight-bold);
       font-family: var(--font-mono);
-      flex-shrink: 0;
-      font-size: 0.75rem;
       letter-spacing: 0.03em;
+      flex-shrink: 0;
+      padding: 0 0.5rem;
     }
 
-    .file-icon-badge.pdf  { background: rgba(220, 38, 38,  0.1); color: #dc2626; border: 1px solid rgba(220,38,38,0.2); }
-    .file-icon-badge.docx { background: rgba(37, 99, 235,  0.08); color: var(--color-accent); border: 1px solid rgba(37,99,235,0.2); }
-    .file-icon-badge.txt  { background: rgba(22, 163, 74, 0.08); color: #16a34a; border: 1px solid rgba(22,163,74,0.2); }
+    .file-type-badge.pdf  { background: rgba(220,38,38,0.08);  color: #dc2626; border: 1px solid rgba(220,38,38,0.15); }
+    .file-type-badge.docx { background: rgba(37,99,235,0.07);  color: #2563eb; border: 1px solid rgba(37,99,235,0.15); }
+    .file-type-badge.txt  { background: rgba(22,163,74,0.07);  color: #16a34a; border: 1px solid rgba(22,163,74,0.15); }
 
-    .file-info {
-      flex: 1;
-      min-width: 0;
-    }
+    .file-details { flex: 1; min-width: 0; }
 
     .file-name {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .file-meta {
+    .file-size {
       font-size: var(--font-size-xs);
       color: var(--color-text-tertiary);
       font-family: var(--font-mono);
-      margin-top: 0.15rem;
     }
 
-    .btn-remove-file {
+    .btn-remove {
       background: none;
       border: none;
-      font-size: 1.25rem;
       color: var(--color-text-tertiary);
       cursor: pointer;
-      padding: 0.25rem;
+      padding: 0.25rem 0.375rem;
       border-radius: var(--radius-sm);
-      transition: all var(--transition-fast);
-      flex-shrink: 0;
+      font-size: 1.1rem;
       line-height: 1;
+      transition: all var(--transition-fast);
     }
 
-    .btn-remove-file:hover {
+    .btn-remove:hover {
       color: var(--color-error);
-      background: rgba(220, 38, 38, 0.08);
+      background: rgba(220,38,38,0.07);
     }
 
-    /* ── Format selection ── */
-    .format-selection {
+    /* ── Format picker ── */
+    .format-picker {
       display: none;
-      padding: 1.5rem;
-      border-bottom: 1px solid var(--color-border);
+      padding: 1.25rem;
+      gap: 0.625rem;
+      flex-direction: column;
     }
 
-    .format-selection.visible {
-      display: block;
-    }
+    .format-picker.visible { display: flex; }
 
-    .format-selection-label {
-      font-size: var(--font-size-sm);
+    .format-picker-label {
+      font-size: var(--font-size-xs);
       font-weight: var(--font-weight-semibold);
-      color: var(--color-text-secondary);
+      color: var(--color-text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.06em;
-      font-size: 0.7rem;
-      margin-bottom: 0.875rem;
     }
 
-    .format-targets {
+    .format-options {
       display: flex;
-      gap: 0.75rem;
+      gap: 0.625rem;
       flex-wrap: wrap;
     }
 
-    .format-target-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      padding: 0.875rem 1.25rem;
+    .format-option {
+      flex: 1;
+      min-width: 120px;
+      padding: 0.875rem 1rem;
       background: var(--color-background);
       border: 1.5px solid var(--color-border);
       border-radius: var(--radius-md);
       cursor: pointer;
-      transition: all var(--transition-normal);
-      flex: 1;
-      min-width: 140px;
-      max-width: 220px;
-      text-align: left;
-      font-family: var(--font-primary);
-    }
-
-    .format-target-btn:hover {
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-    }
-
-    .format-target-btn.selected {
-      border-color: var(--color-accent);
-      background: var(--color-accent-subtle);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-    }
-
-    .format-target-icon {
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-
-    .format-target-info {
-      flex: 1;
-    }
-
-    .format-target-name {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-      display: block;
-    }
-
-    .format-target-desc {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      margin-top: 0.15rem;
-      display: block;
-    }
-
-    .format-target-btn.selected .format-target-name {
-      color: var(--color-accent);
-    }
-
-    /* ── Actions ── */
-    .converter-actions {
-      display: none;
-      padding: 1.25rem 1.5rem;
-      gap: 0.75rem;
-      border-bottom: 1px solid var(--color-border);
-    }
-
-    .converter-actions.visible {
       display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      font-family: var(--font-primary);
+      transition: all var(--transition-fast);
+      text-align: left;
     }
+
+    .format-option:hover {
+      border-color: var(--color-accent);
+      background: var(--color-accent-subtle);
+    }
+
+    .format-option.selected {
+      border-color: var(--color-accent);
+      background: var(--color-accent-subtle);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    }
+
+    .format-option-icon { font-size: 1.25rem; }
+
+    .format-option-label {
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-primary);
+    }
+
+    .format-option.selected .format-option-label {
+      color: var(--color-accent);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    /* ── Action row ── */
+    .action-row {
+      display: none;
+      padding: 1rem 1.25rem;
+    }
+
+    .action-row.visible { display: flex; }
 
     .btn-convert {
       flex: 1;
-      padding: 0.875rem 1.5rem;
+      width: 100%;
+      padding: 0.875rem;
       background: var(--color-accent);
       color: #fff;
       border: none;
@@ -405,107 +349,85 @@
     }
 
     .btn-convert:disabled {
-      opacity: 0.45;
+      opacity: 0.4;
       cursor: not-allowed;
       transform: none;
     }
 
-    /* ── Processing state ── */
-    .processing-state {
+    /* ── Processing ── */
+    .processing {
       display: none;
-      padding: 2.5rem 1.5rem;
+      padding: 2.25rem 1.25rem;
       flex-direction: column;
       align-items: center;
-      gap: 1.25rem;
-      border-bottom: 1px solid var(--color-border);
+      gap: 1rem;
     }
 
-    .processing-state.visible {
-      display: flex;
-    }
+    .processing.visible { display: flex; }
 
-    .spinner-ring {
-      width: 48px;
-      height: 48px;
+    .spinner {
+      width: 40px;
+      height: 40px;
       border: 3px solid var(--color-border);
       border-top-color: var(--color-accent);
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
+      animation: spin 0.75s linear infinite;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    .processing-label {
-      font-size: var(--font-size-sm);
-      color: var(--color-text-secondary);
-      font-weight: var(--font-weight-medium);
-    }
+    .processing-msg  { font-size: var(--font-size-sm); color: var(--color-text-secondary); }
+    .processing-hint { font-size: var(--font-size-xs); color: var(--color-text-tertiary); font-family: var(--font-mono); margin-top: -0.5rem; }
 
-    .processing-sub {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-      font-family: var(--font-mono);
-      margin-top: -0.75rem;
-    }
-
-    /* ── Result state ── */
-    .result-state {
+    /* ── Result ── */
+    .result {
       display: none;
-      padding: 1.75rem 1.5rem;
-      gap: 1.25rem;
-      border-bottom: 1px solid var(--color-border);
+      padding: 1.25rem;
       align-items: center;
+      gap: 1rem;
     }
 
-    .result-state.visible {
-      display: flex;
-    }
+    .result.visible { display: flex; }
 
-    .result-check {
-      width: 48px;
-      height: 48px;
-      background: rgba(22, 163, 74, 0.1);
+    .result-icon {
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
+      background: rgba(22,163,74,0.1);
+      border: 1px solid rgba(22,163,74,0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
+      font-size: 1.1rem;
       flex-shrink: 0;
-      animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     @keyframes popIn {
-      from { transform: scale(0); opacity: 0; }
-      to   { transform: scale(1); opacity: 1; }
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
     }
 
-    .result-info {
-      flex: 1;
-    }
+    .result-info { flex: 1; min-width: 0; }
 
-    .result-title {
+    .result-filename {
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-      margin-bottom: 0.2rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .result-meta {
+    .result-filesize {
       font-size: var(--font-size-xs);
       color: var(--color-text-tertiary);
       font-family: var(--font-mono);
     }
 
-    .result-actions {
-      display: flex;
-      gap: 0.625rem;
-      flex-shrink: 0;
-    }
+    .result-btns { display: flex; gap: 0.5rem; flex-shrink: 0; }
 
     .btn-download {
-      padding: 0.625rem 1.25rem;
+      padding: 0.625rem 1.125rem;
       background: var(--color-primary);
       color: var(--color-background);
       border: none;
@@ -514,19 +436,16 @@
       font-weight: var(--font-weight-semibold);
       font-size: var(--font-size-sm);
       cursor: pointer;
-      transition: all var(--transition-normal);
+      transition: opacity var(--transition-fast);
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.35rem;
     }
 
-    .btn-download:hover {
-      opacity: 0.88;
-      transform: translateY(-1px);
-    }
+    .btn-download:hover { opacity: 0.82; }
 
-    .btn-convert-another {
-      padding: 0.625rem 1rem;
+    .btn-again {
+      padding: 0.625rem 0.875rem;
       background: transparent;
       color: var(--color-text-secondary);
       border: 1px solid var(--color-border);
@@ -534,163 +453,49 @@
       font-family: var(--font-primary);
       font-size: var(--font-size-sm);
       cursor: pointer;
-      transition: all var(--transition-normal);
+      transition: all var(--transition-fast);
+      white-space: nowrap;
     }
 
-    .btn-convert-another:hover {
+    .btn-again:hover {
       border-color: var(--color-accent);
       color: var(--color-accent);
     }
 
-    /* ── Error state ── */
-    .error-state {
+    /* ── Error ── */
+    .error-bar {
       display: none;
-      padding: 1.25rem 1.5rem;
-      background: rgba(220, 38, 38, 0.04);
-      border-bottom: 1px solid rgba(220, 38, 38, 0.15);
-      gap: 0.875rem;
+      padding: 0.875rem 1.25rem;
+      background: rgba(220,38,38,0.05);
+      border-top: 1px solid rgba(220,38,38,0.12);
+      gap: 0.625rem;
       align-items: flex-start;
     }
 
-    .error-state.visible {
-      display: flex;
-    }
+    .error-bar.visible { display: flex; }
 
-    .error-icon {
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
-    }
-
-    .error-text {
-      font-size: var(--font-size-sm);
-      color: var(--color-error);
-      line-height: 1.55;
-    }
-
-    /* ── Info footer ── */
-    .converter-info-footer {
-      padding: 1rem 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .info-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: var(--font-size-xs);
-      color: var(--color-text-tertiary);
-    }
-
-    .info-badge-icon {
-      font-size: 0.875rem;
-      opacity: 0.7;
-    }
-
-    /* =========================================
-       QUALITY NOTES SECTION
-       ========================================= */
-    .quality-section {
-      margin-top: 2rem;
-    }
-
-    .quality-heading {
-      font-size: var(--font-size-xs);
-      font-weight: var(--font-weight-semibold);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--color-text-tertiary);
-      margin-bottom: 0.875rem;
-    }
-
-    .quality-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.875rem;
-    }
-
-    .quality-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: 1.125rem 1.25rem;
-      display: flex;
-      gap: 0.875rem;
-      align-items: flex-start;
-    }
-
-    .quality-card-icon {
-      font-size: 1.25rem;
-      flex-shrink: 0;
-    }
-
-    .quality-card-body {}
-
-    .quality-card-title {
-      font-size: var(--font-size-sm);
-      font-weight: var(--font-weight-semibold);
-      color: var(--color-text-primary);
-      margin-bottom: 0.3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .quality-level {
-      font-size: 0.65rem;
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      padding: 0.15rem 0.45rem;
-      border-radius: var(--radius-full);
-    }
-
-    .quality-level.excellent {
-      background: rgba(22, 163, 74, 0.1);
-      color: #16a34a;
-    }
-
-    .quality-level.high {
-      background: rgba(37, 99, 235, 0.08);
-      color: var(--color-accent);
-    }
-
-    .quality-level.good {
-      background: rgba(234, 88, 12, 0.08);
-      color: var(--color-warning);
-    }
-
-    .quality-card-text {
-      font-size: var(--font-size-xs);
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-    }
+    .error-icon { color: var(--color-error); flex-shrink: 0; font-size: 0.875rem; margin-top: 0.1rem; }
+    .error-msg  { font-size: var(--font-size-sm); color: var(--color-error); line-height: 1.55; }
 
     /* =========================================
        RESPONSIVE
        ========================================= */
-    @media (max-width: 700px) {
+    @media (max-width: 640px) {
       main { padding: 1.5rem 1rem 4rem; }
       .app-header { margin: 0.75rem 1rem 0; padding: 1rem; }
-      .hero-title { font-size: 1.75rem; }
-      .quality-grid { grid-template-columns: 1fr; }
-      .format-targets { flex-direction: column; }
-      .format-target-btn { max-width: 100%; }
-      .result-state { flex-direction: column; align-items: flex-start; }
-      .result-actions { width: 100%; }
-      .btn-download, .btn-convert-another { flex: 1; justify-content: center; }
-      .converter-info-footer { gap: 0.875rem; }
+      .format-options { flex-direction: column; }
+      .format-option { min-width: unset; }
+      .result { flex-wrap: wrap; }
+      .result-btns { width: 100%; }
+      .btn-download, .btn-again { flex: 1; justify-content: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header class="app-header">
     <div class="app-header-left">
-      <a href="../../index.html" class="logo" title="Good Free Apps">
+      <a href="../../index.html" class="logo">
         <div class="logo-mark">G</div>
         <span>Good Free Apps</span>
       </a>
@@ -701,270 +506,123 @@
     </div>
   </header>
 
-  <!-- Main -->
   <main>
+    <h1 class="page-title">PDF Converter</h1>
+    <p class="page-subtitle">Convert between PDF, Word, and plain text.</p>
 
-    <!-- Hero -->
-    <div class="hero">
-      <div class="hero-eyebrow">
-        <span>🔄</span> Document Converter
-      </div>
-      <h1 class="hero-title">Convert documents<br>without paying for it</h1>
-      <p class="hero-subtitle">
-        PDF to Word. Word to PDF. PDF to text. High-fidelity conversions — the kind
-        Adobe charges $20/month for — free, private, and processed without storing your files.
-      </p>
-    </div>
-
-    <!-- Converter card -->
     <div class="converter-card">
 
       <!-- Upload zone -->
       <div class="upload-zone" id="upload-zone">
-        <input
-          type="file"
-          id="file-input"
-          accept=".pdf,.docx,.doc,.txt,.md"
-          aria-label="Upload document to convert"
-        >
+        <input type="file" id="file-input" accept=".pdf,.docx,.doc,.txt,.md" aria-label="Upload file">
         <div class="upload-icon">📄</div>
-        <div class="upload-text">
-          <strong>Drop your document here</strong>
-          <span>or click anywhere to browse</span>
+        <div class="upload-label">
+          <strong>Drop a file here</strong>
+          <span>or click to browse</span>
         </div>
-        <div class="format-pills">
-          <span class="format-pill">PDF</span>
-          <span class="format-pill">DOCX</span>
-          <span class="format-pill">TXT</span>
+        <div class="upload-formats">
+          <span class="upload-format">PDF</span>
+          <span class="upload-format">DOCX</span>
+          <span class="upload-format">TXT</span>
         </div>
       </div>
 
-      <!-- File selected bar -->
-      <div class="file-selected-bar" id="file-bar">
-        <div class="file-icon-badge" id="file-icon-badge">—</div>
-        <div class="file-info">
+      <!-- File bar (shown after upload) -->
+      <div class="file-bar" id="file-bar">
+        <div class="file-type-badge" id="file-type-badge">—</div>
+        <div class="file-details">
           <div class="file-name" id="file-name">—</div>
-          <div class="file-meta" id="file-meta">—</div>
+          <div class="file-size" id="file-size">—</div>
         </div>
-        <button class="btn-remove-file" onclick="clearFile()" aria-label="Remove file" title="Remove file">×</button>
+        <button class="btn-remove" onclick="resetAll()" aria-label="Remove file">×</button>
       </div>
+
+      <div class="card-divider" id="divider-1" style="display:none;"></div>
 
       <!-- Error -->
-      <div class="error-state" id="error-state" role="alert">
+      <div class="error-bar" id="error-bar" role="alert">
         <span class="error-icon">⚠</span>
-        <span class="error-text" id="error-text"></span>
+        <span class="error-msg" id="error-msg"></span>
       </div>
 
-      <!-- Format selection -->
-      <div class="format-selection" id="format-selection">
-        <div class="format-selection-label">Convert to</div>
-        <div class="format-targets" id="format-targets">
-          <!-- Rendered by JS based on source format -->
-        </div>
+      <!-- Format picker -->
+      <div class="format-picker" id="format-picker">
+        <div class="format-picker-label">Convert to</div>
+        <div class="format-options" id="format-options"></div>
       </div>
+
+      <div class="card-divider" id="divider-2" style="display:none;"></div>
 
       <!-- Convert button -->
-      <div class="converter-actions" id="converter-actions">
-        <button class="btn-convert" id="convert-btn" onclick="runConversion()" disabled>
-          Convert →
-        </button>
+      <div class="action-row" id="action-row">
+        <button class="btn-convert" id="convert-btn" onclick="runConversion()" disabled>Convert</button>
       </div>
 
-      <!-- Processing -->
-      <div class="processing-state" id="processing-state">
-        <div class="spinner-ring"></div>
-        <div class="processing-label" id="processing-label">Converting…</div>
-        <div class="processing-sub" id="processing-sub">This may take a moment for large files</div>
+      <!-- Processing state -->
+      <div class="processing" id="processing">
+        <div class="spinner"></div>
+        <div class="processing-msg" id="processing-msg">Converting…</div>
+        <div class="processing-hint" id="processing-hint"></div>
       </div>
 
       <!-- Result -->
-      <div class="result-state" id="result-state">
-        <div class="result-check">✓</div>
+      <div class="result" id="result">
+        <div class="result-icon">✓</div>
         <div class="result-info">
-          <div class="result-title" id="result-title">Conversion complete</div>
-          <div class="result-meta" id="result-meta">—</div>
+          <div class="result-filename" id="result-filename">—</div>
+          <div class="result-filesize" id="result-filesize">—</div>
         </div>
-        <div class="result-actions">
-          <button class="btn-download" id="download-btn" onclick="downloadResult()">
-            ↓ Download
-          </button>
-          <button class="btn-convert-another" onclick="clearFile()">Convert another</button>
+        <div class="result-btns">
+          <button class="btn-download" onclick="downloadResult()">↓ Download</button>
+          <button class="btn-again" onclick="resetAll()">Convert another</button>
         </div>
       </div>
 
-      <!-- Footer trust signals -->
-      <div class="converter-info-footer">
-        <div class="info-badge">
-          <span class="info-badge-icon">🔒</span>
-          <span>Files are never stored</span>
-        </div>
-        <div class="info-badge">
-          <span class="info-badge-icon">⚡</span>
-          <span>Processed server-side</span>
-        </div>
-        <div class="info-badge">
-          <span class="info-badge-icon">🚫</span>
-          <span>No account required</span>
-        </div>
-      </div>
-
-    </div><!-- /converter-card -->
-
-    <!-- Quality notes -->
-    <div class="quality-section">
-      <div class="quality-heading">Conversion quality reference</div>
-      <div class="quality-grid">
-
-        <div class="quality-card">
-          <div class="quality-card-icon">📝→📄</div>
-          <div class="quality-card-body">
-            <div class="quality-card-title">
-              Word → PDF
-              <span class="quality-level excellent">Excellent</span>
-            </div>
-            <div class="quality-card-text">
-              Converted via LibreOffice — the same engine that powers professional
-              document workflows. Styles, tables, headers/footers, images, and page
-              layout are reproduced with near-pixel-perfect accuracy.
-            </div>
-          </div>
-        </div>
-
-        <div class="quality-card">
-          <div class="quality-card-icon">📄→📝</div>
-          <div class="quality-card-body">
-            <div class="quality-card-title">
-              PDF → Word
-              <span class="quality-level high">High</span>
-            </div>
-            <div class="quality-card-text">
-              Uses pdf2docx to reconstruct Word elements from PDF geometry. Text,
-              bold/italic, tables, images, and approximate layouts are preserved.
-              Complex multi-column or heavily styled PDFs may need minor adjustments.
-            </div>
-          </div>
-        </div>
-
-        <div class="quality-card">
-          <div class="quality-card-icon">📄→📋</div>
-          <div class="quality-card-body">
-            <div class="quality-card-title">
-              PDF → Text
-              <span class="quality-level excellent">Excellent</span>
-            </div>
-            <div class="quality-card-text">
-              Extracts text via PyMuPDF, reading directly from the PDF's internal
-              character data. Handles tracked-out display type, multi-column layouts,
-              and font metadata with high accuracy.
-            </div>
-          </div>
-        </div>
-
-        <div class="quality-card">
-          <div class="quality-card-icon">📋→📄</div>
-          <div class="quality-card-body">
-            <div class="quality-card-title">
-              Text → PDF
-              <span class="quality-level high">High</span>
-            </div>
-            <div class="quality-card-text">
-              Typesets your text using ReportLab with Times 11pt, 1-inch margins,
-              and proper Unicode support. Produces clean, print-ready output.
-              Source formatting is not inferred — what you type is what you get.
-            </div>
-          </div>
-        </div>
-
-      </div>
     </div>
-
   </main>
 
   <script>
-    // =========================================
+    // =============================================
     // CONFIGURATION
-    // =========================================
+    // =============================================
     const BACKEND_URL = 'https://goodfreeapps-production.up.railway.app';
 
-    // =========================================
-    // CONVERSION CAPABILITY MAP
-    // Which formats each source can convert to
-    // =========================================
-    const CONVERSION_MAP = {
+    // =============================================
+    // CONVERSION OPTIONS PER SOURCE FORMAT
+    // =============================================
+    const TARGETS = {
       pdf: [
-        {
-          format: 'docx',
-          label: 'Word Document',
-          ext: '.docx',
-          icon: '📝',
-          desc: 'Editable .docx file',
-          processingMsg: 'Rebuilding document structure…',
-          processingNote: 'Formatting fidelity depends on PDF complexity',
-        },
-        {
-          format: 'txt',
-          label: 'Plain Text',
-          ext: '.txt',
-          icon: '📋',
-          desc: 'Clean, extracted text',
-          processingMsg: 'Extracting text from PDF…',
-          processingNote: 'Scanned PDFs cannot be extracted without OCR',
-        },
+        { format: 'docx', label: 'Word (.docx)', icon: '📝',
+          msg: 'Converting to Word…', hint: 'May take a moment for complex PDFs' },
+        { format: 'txt',  label: 'Plain text (.txt)', icon: '📋',
+          msg: 'Extracting text…', hint: '' },
       ],
       docx: [
-        {
-          format: 'pdf',
-          label: 'PDF Document',
-          ext: '.pdf',
-          icon: '📄',
-          desc: 'Fixed layout .pdf',
-          processingMsg: 'Rendering PDF via LibreOffice…',
-          processingNote: 'Large documents may take 15–30 seconds',
-        },
-        {
-          format: 'txt',
-          label: 'Plain Text',
-          ext: '.txt',
-          icon: '📋',
-          desc: 'Clean, extracted text',
-          processingMsg: 'Extracting text from Word document…',
-          processingNote: '',
-        },
+        { format: 'pdf',  label: 'PDF (.pdf)',  icon: '📄',
+          msg: 'Rendering PDF…', hint: 'May take 15–30 seconds for large documents' },
+        { format: 'txt',  label: 'Plain text (.txt)', icon: '📋',
+          msg: 'Extracting text…', hint: '' },
       ],
       txt: [
-        {
-          format: 'pdf',
-          label: 'PDF Document',
-          ext: '.pdf',
-          icon: '📄',
-          desc: 'Typeset .pdf file',
-          processingMsg: 'Typesetting PDF…',
-          processingNote: '',
-        },
-        {
-          format: 'docx',
-          label: 'Word Document',
-          ext: '.docx',
-          icon: '📝',
-          desc: 'Basic .docx file',
-          processingMsg: 'Building Word document…',
-          processingNote: '',
-        },
+        { format: 'pdf',  label: 'PDF (.pdf)',  icon: '📄',
+          msg: 'Typesetting PDF…', hint: '' },
+        { format: 'docx', label: 'Word (.docx)', icon: '📝',
+          msg: 'Building Word document…', hint: '' },
       ],
     };
 
-    // =========================================
+    // =============================================
     // STATE
-    // =========================================
-    let currentFile     = null;
-    let sourceFormat    = null;   // 'pdf', 'docx', 'txt'
-    let selectedTarget  = null;   // 'pdf', 'docx', 'txt'
-    let resultBlob      = null;
-    let resultFilename  = null;
+    // =============================================
+    let currentFile    = null;
+    let sourceFormat   = null;
+    let selectedTarget = null;
+    let resultBlob     = null;
+    let resultFilename = null;
 
-    // =========================================
+    // =============================================
     // THEME
-    // =========================================
+    // =============================================
     function toggleTheme() {
       const html = document.documentElement;
       const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -972,208 +630,166 @@
       localStorage.setItem('theme', next);
     }
 
-    (function initTheme() {
+    (function() {
       const saved = localStorage.getItem('theme');
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.setAttribute('data-theme', saved || (systemDark ? 'dark' : 'light'));
+      const dark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', saved || (dark ? 'dark' : 'light'));
     })();
 
-    // =========================================
+    // =============================================
     // FILE HANDLING
-    // =========================================
+    // =============================================
     const uploadZone = document.getElementById('upload-zone');
     const fileInput  = document.getElementById('file-input');
 
-    // Drag & drop
     uploadZone.addEventListener('dragover', e => {
       e.preventDefault();
       uploadZone.classList.add('drag-over');
     });
 
     uploadZone.addEventListener('dragleave', e => {
-      if (!uploadZone.contains(e.relatedTarget)) {
-        uploadZone.classList.remove('drag-over');
-      }
+      if (!uploadZone.contains(e.relatedTarget)) uploadZone.classList.remove('drag-over');
     });
 
     uploadZone.addEventListener('drop', e => {
       e.preventDefault();
       uploadZone.classList.remove('drag-over');
-      const files = e.dataTransfer.files;
-      if (files.length > 0) handleFile(files[0]);
+      if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
     });
 
     fileInput.addEventListener('change', () => {
-      if (fileInput.files.length > 0) handleFile(fileInput.files[0]);
+      if (fileInput.files.length) handleFile(fileInput.files[0]);
     });
 
     function handleFile(file) {
       clearError();
-      resetResult();
 
       const ext = file.name.split('.').pop().toLowerCase();
-      const formatMap = {
-        pdf:      'pdf',
-        docx:     'docx',
-        doc:      'docx',
-        txt:      'txt',
-        md:       'txt',
-        markdown: 'txt',
-      };
+      const fmtMap = { pdf: 'pdf', docx: 'docx', doc: 'docx', txt: 'txt', md: 'txt', markdown: 'txt' };
+      const fmt    = fmtMap[ext];
 
-      const fmt = formatMap[ext];
       if (!fmt) {
-        showError(`Unsupported file type ".${ext}". Please upload a PDF, DOCX, or TXT file.`);
+        showError(`".${ext}" files are not supported. Upload a PDF, DOCX, or TXT file.`);
         return;
       }
-
       if (file.size > 50 * 1024 * 1024) {
-        showError('File is too large. Maximum size is 50 MB.');
+        showError('File exceeds the 50 MB limit.');
         return;
       }
 
       currentFile  = file;
       sourceFormat = fmt;
 
-      // Update file bar
-      const badge = document.getElementById('file-icon-badge');
+      const badge = document.getElementById('file-type-badge');
       badge.textContent = ext.toUpperCase();
-      badge.className = `file-icon-badge ${fmt}`;
-
+      badge.className = `file-type-badge ${fmt}`;
       document.getElementById('file-name').textContent = file.name;
-      document.getElementById('file-meta').textContent =
-        `${formatFileSize(file.size)} · ${fmt.toUpperCase()}`;
-
+      document.getElementById('file-size').textContent = fmtSize(file.size);
       document.getElementById('file-bar').classList.add('visible');
       document.getElementById('upload-zone').style.display = 'none';
+      document.getElementById('divider-1').style.display   = '';
 
-      renderFormatTargets(fmt);
-      document.getElementById('format-selection').classList.add('visible');
-      document.getElementById('converter-actions').classList.add('visible');
+      renderTargets(fmt);
+      document.getElementById('format-picker').classList.add('visible');
+      document.getElementById('divider-2').style.display  = '';
+      document.getElementById('action-row').classList.add('visible');
     }
 
-    function renderFormatTargets(fmt) {
-      const targets = CONVERSION_MAP[fmt] || [];
-      const container = document.getElementById('format-targets');
+    function renderTargets(fmt) {
+      const container = document.getElementById('format-options');
       container.innerHTML = '';
       selectedTarget = null;
+      document.getElementById('convert-btn').disabled = true;
 
-      targets.forEach((t, i) => {
+      (TARGETS[fmt] || []).forEach((t, i) => {
         const btn = document.createElement('button');
-        btn.className = 'format-target-btn';
-        btn.dataset.format = t.format;
-        btn.innerHTML = `
-          <span class="format-target-icon">${t.icon}</span>
-          <span class="format-target-info">
-            <span class="format-target-name">${t.label}</span>
-            <span class="format-target-desc">${t.desc}</span>
-          </span>
+        btn.className    = 'format-option';
+        btn.dataset.fmt  = t.format;
+        btn.innerHTML    = `
+          <span class="format-option-icon">${t.icon}</span>
+          <span class="format-option-label">${t.label}</span>
         `;
         btn.addEventListener('click', () => selectTarget(t.format));
         container.appendChild(btn);
-
-        // Auto-select the first option
-        if (i === 0) {
-          setTimeout(() => selectTarget(t.format), 0);
-        }
+        if (i === 0) setTimeout(() => selectTarget(t.format), 0);
       });
     }
 
     function selectTarget(fmt) {
       selectedTarget = fmt;
-
-      document.querySelectorAll('.format-target-btn').forEach(btn => {
-        btn.classList.toggle('selected', btn.dataset.format === fmt);
+      document.querySelectorAll('.format-option').forEach(b => {
+        b.classList.toggle('selected', b.dataset.fmt === fmt);
       });
-
       document.getElementById('convert-btn').disabled = false;
     }
 
-    function clearFile() {
-      currentFile    = null;
-      sourceFormat   = null;
-      selectedTarget = null;
-      resultBlob     = null;
-      resultFilename = null;
-
-      fileInput.value = '';
-
-      document.getElementById('upload-zone').style.display = '';
-      document.getElementById('file-bar').classList.remove('visible');
-      document.getElementById('format-selection').classList.remove('visible');
-      document.getElementById('converter-actions').classList.remove('visible');
-      document.getElementById('processing-state').classList.remove('visible');
-      document.getElementById('result-state').classList.remove('visible');
-      document.getElementById('convert-btn').disabled = true;
-      clearError();
-    }
-
-    // =========================================
+    // =============================================
     // CONVERSION
-    // =========================================
+    // =============================================
     async function runConversion() {
       if (!currentFile || !selectedTarget || !BACKEND_URL) return;
 
       clearError();
-      resetResult();
-      setProcessing(true);
+      resultBlob = null;
+      document.getElementById('result').classList.remove('visible');
+      document.getElementById('format-picker').classList.remove('visible');
+      document.getElementById('divider-2').style.display  = 'none';
+      document.getElementById('action-row').classList.remove('visible');
+      document.getElementById('processing').classList.add('visible');
 
-      const targetInfo = (CONVERSION_MAP[sourceFormat] || [])
-        .find(t => t.format === selectedTarget);
-
-      if (targetInfo) {
-        document.getElementById('processing-label').textContent = targetInfo.processingMsg;
-        document.getElementById('processing-sub').textContent   =
-          targetInfo.processingNote || 'Processing your document…';
-      }
+      const tInfo = (TARGETS[sourceFormat] || []).find(t => t.format === selectedTarget);
+      document.getElementById('processing-msg').textContent  = tInfo?.msg  || 'Converting…';
+      document.getElementById('processing-hint').textContent = tInfo?.hint || '';
 
       try {
-        const formData = new FormData();
-        formData.append('file', currentFile);
-        formData.append('target_format', selectedTarget);
+        const fd = new FormData();
+        fd.append('file', currentFile);
+        fd.append('target_format', selectedTarget);
 
-        const controller = new AbortController();
-        const timeoutId  = setTimeout(() => controller.abort(), 3 * 60 * 1000); // 3 min
+        const ctrl = new AbortController();
+        const tid  = setTimeout(() => ctrl.abort(), 3 * 60 * 1000);
 
-        const response = await fetch(`${BACKEND_URL}/api/convert`, {
+        const res = await fetch(`${BACKEND_URL}/api/convert`, {
           method: 'POST',
-          body: formData,
-          signal: controller.signal,
+          body: fd,
+          signal: ctrl.signal,
         });
 
-        clearTimeout(timeoutId);
+        clearTimeout(tid);
 
-        if (!response.ok) {
-          let errMsg = 'Conversion failed. Please try again.';
+        if (!res.ok) {
+          let msg = 'Conversion failed. Please try again.';
           try {
-            const errData = await response.json();
-            errMsg = mapErrorCode(errData.code, errData.message);
+            const err = await res.json();
+            msg = mapError(err.code, err.message);
           } catch (_) {}
-          showError(errMsg);
+          showError(msg);
+          restoreControls();
           return;
         }
 
-        const blob = await response.blob();
-
-        // Build output filename
+        const blob = await res.blob();
         const stem = currentFile.name.replace(/\.[^.]+$/, '');
-        const extMap = { txt: '.txt', docx: '.docx', pdf: '.pdf' };
-        resultFilename = stem + (extMap[selectedTarget] || `.${selectedTarget}`);
-        resultBlob = blob;
+        const exts  = { txt: '.txt', docx: '.docx', pdf: '.pdf' };
+        resultFilename = stem + (exts[selectedTarget] || `.${selectedTarget}`);
+        resultBlob     = blob;
 
-        showResult(resultFilename, blob.size);
+        document.getElementById('result-filename').textContent = resultFilename;
+        document.getElementById('result-filesize').textContent = fmtSize(blob.size);
+        document.getElementById('result').classList.add('visible');
 
       } catch (err) {
         if (err.name === 'AbortError') {
-          showError('The request timed out. Your file may be too large or the server is busy. Please try again.');
-        } else if (err.name === 'TypeError' && err.message.includes('fetch')) {
-          showError('Could not reach the conversion server. Please check your connection and try again.');
+          showError('The request timed out. Try a smaller file or try again later.');
+        } else if (err.name === 'TypeError') {
+          showError('Could not reach the server. Check your connection and try again.');
         } else {
-          showError('An unexpected error occurred. Please try again.');
-          console.error('[Converter]', err);
+          showError('Something went wrong. Please try again.');
+          console.error('[PDF Converter]', err);
         }
+        restoreControls();
       } finally {
-        setProcessing(false);
+        document.getElementById('processing').classList.remove('visible');
       }
     }
 
@@ -1181,81 +797,70 @@
       if (!resultBlob || !resultFilename) return;
       const url = URL.createObjectURL(resultBlob);
       const a   = document.createElement('a');
-      a.href     = url;
-      a.download = resultFilename;
+      a.href = url; a.download = resultFilename;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 10000);
     }
 
-    // =========================================
-    // UI STATE HELPERS
-    // =========================================
-    function setProcessing(active) {
-      document.getElementById('processing-state').classList.toggle('visible', active);
-      document.getElementById('converter-actions').classList.toggle('visible', !active && !!currentFile && !resultBlob);
-      document.getElementById('format-selection').classList.toggle('visible', !active && !!currentFile && !resultBlob);
-      document.getElementById('convert-btn').disabled = active;
+    function restoreControls() {
+      document.getElementById('format-picker').classList.add('visible');
+      document.getElementById('divider-2').style.display = '';
+      document.getElementById('action-row').classList.add('visible');
     }
 
-    function showResult(filename, size) {
-      document.getElementById('result-title').textContent = 'Conversion complete';
-      document.getElementById('result-meta').textContent  =
-        `${filename}  ·  ${formatFileSize(size)}`;
-      document.getElementById('result-state').classList.add('visible');
-      document.getElementById('format-selection').classList.remove('visible');
-      document.getElementById('converter-actions').classList.remove('visible');
+    function resetAll() {
+      currentFile = sourceFormat = selectedTarget = resultBlob = resultFilename = null;
+      fileInput.value = '';
+      document.getElementById('upload-zone').style.display    = '';
+      document.getElementById('file-bar').classList.remove('visible');
+      document.getElementById('divider-1').style.display      = 'none';
+      document.getElementById('format-picker').classList.remove('visible');
+      document.getElementById('divider-2').style.display      = 'none';
+      document.getElementById('action-row').classList.remove('visible');
+      document.getElementById('processing').classList.remove('visible');
+      document.getElementById('result').classList.remove('visible');
+      document.getElementById('convert-btn').disabled = true;
+      clearError();
     }
 
-    function resetResult() {
-      resultBlob = null;
-      resultFilename = null;
-      document.getElementById('result-state').classList.remove('visible');
-    }
-
+    // =============================================
+    // ERRORS
+    // =============================================
     function showError(msg) {
-      document.getElementById('error-text').textContent = msg;
-      document.getElementById('error-state').classList.add('visible');
+      document.getElementById('error-msg').textContent = msg;
+      document.getElementById('error-bar').classList.add('visible');
     }
 
     function clearError() {
-      document.getElementById('error-state').classList.remove('visible');
+      document.getElementById('error-bar').classList.remove('visible');
     }
 
-    function mapErrorCode(code, fallback) {
-      const messages = {
-        SCANNED_PDF:
-          'This PDF appears to be a scanned image. Text-based extraction is not available for scanned documents — try a PDF that was exported from Word, Google Docs, or another application.',
-        NO_TEXT_EXTRACTED:
-          'No text could be extracted from this file. It may be empty, encrypted, or contain only images.',
-        LIBREOFFICE_ERROR:
-          'The document could not be converted to PDF. It may be password-protected or use unsupported formatting.',
-        NO_OUTPUT:
-          'Conversion produced no output. The document may be empty or protected.',
-        DEPENDENCY_MISSING:
-          'A required server component is not installed. Please contact support.',
-        SAME_FORMAT:
-          'The source and target formats are the same. Choose a different output format.',
-        UNSUPPORTED_CONVERSION:
-          'This conversion combination is not supported.',
-        RATE_LIMITED:
-          'Too many requests. Please wait a moment and try again.',
-        SIZE_LIMIT_EXCEEDED:
-          'File is too large. Maximum size is 50 MB.',
+    function mapError(code, fallback) {
+      const map = {
+        SCANNED_PDF:            'This PDF is a scanned image — text cannot be extracted without OCR. Try a PDF created digitally.',
+        NO_TEXT_EXTRACTED:      'No text could be extracted. The file may be empty or image-only.',
+        LIBREOFFICE_ERROR:      'Could not convert to PDF. The file may be password-protected or corrupted.',
+        NO_OUTPUT:              'Conversion produced no output. The document may be empty or protected.',
+        DEPENDENCY_MISSING:     'A required component is unavailable on the server right now. Please try again later.',
+        SAME_FORMAT:            'Source and target formats are the same.',
+        UNSUPPORTED_CONVERSION: 'This conversion is not supported.',
+        RATE_LIMITED:           'Too many requests — please wait a moment and try again.',
+        SIZE_LIMIT_EXCEEDED:    'File exceeds the 50 MB limit.',
+        SERVER_ERROR:           'A server error occurred. Please try again.',
       };
-      return messages[code] || fallback || 'Conversion failed. Please try again.';
+      return map[code] || fallback || 'Conversion failed. Please try again.';
     }
 
-    // =========================================
+    // =============================================
     // UTILITIES
-    // =========================================
-    function formatFileSize(bytes) {
-      if (bytes === 0) return '0 B';
-      const k = 1024;
-      const units = ['B', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + units[i];
+    // =============================================
+    function fmtSize(bytes) {
+      if (!bytes) return '0 B';
+      const u = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(1024));
+      return (bytes / Math.pow(1024, i)).toFixed(1) + '\u00a0' + u[i];
     }
   </script>
 </body>
