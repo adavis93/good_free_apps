@@ -318,9 +318,20 @@ def convert_endpoint():
 def convert_capabilities():
     """Return the list of supported conversion pairs and whether LibreOffice is available."""
     from core.converter import get_supported_conversions, _find_libreoffice
+
+    # Check which optional packages are importable
+    packages = {}
+    for pkg in ["pdf2docx", "reportlab", "docx", "fitz"]:
+        try:
+            __import__(pkg)
+            packages[pkg] = True
+        except ImportError:
+            packages[pkg] = False
+
     caps = {
         "conversions": get_supported_conversions(),
         "libreoffice_available": _find_libreoffice() is not None,
+        "packages": packages,
     }
     return jsonify(caps)
 
