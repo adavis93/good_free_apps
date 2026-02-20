@@ -18,6 +18,7 @@ lxml>=5.0.0             # Fast HTML/XML parser (BeautifulSoup backend)
 pdf2docx>=0.5.8         # PDF→DOCX: reconstructs Word elements from PDF geometry
                         # (best Python-native PDF→Word conversion available)
 reportlab>=4.2.0        # TXT→PDF: professional-grade PDF typesetting
+# cache-bust: 2026-02-20
 
 # ── Text processing ──────────────────────────────────────────
 chardet>=5.0.0          # Encoding detection for text files
